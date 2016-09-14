@@ -83,6 +83,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         randomMenuItem = new javax.swing.JMenuItem();
         randomPermutationMenuItem = new javax.swing.JMenuItem();
         solveMenu = new javax.swing.JMenu();
+        clearMenuItem = new javax.swing.JMenuItem();
         greedyMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -161,6 +162,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         });
         pointSetMenu.add(randomMenuItem);
 
+        randomPermutationMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         randomPermutationMenuItem.setText("Random Permutation");
         randomPermutationMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -172,6 +174,15 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         menuBar.add(pointSetMenu);
 
         solveMenu.setText("Solve");
+
+        clearMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
+        clearMenuItem.setText("Clear Solution");
+        clearMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearMenuItemActionPerformed(evt);
+            }
+        });
+        solveMenu.add(clearMenuItem);
 
         greedyMenuItem.setText("GreedyASS");
         greedyMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -264,6 +275,10 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         drawPanel.setGrid(GreedyASS.solve(drawPanel.getGrid()));
     }//GEN-LAST:event_greedyMenuItemActionPerformed
 
+    private void clearMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearMenuItemActionPerformed
+        drawPanel.setGrid(new GridSet(drawPanel.getGrid().getGroundSet()));
+    }//GEN-LAST:event_clearMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -274,6 +289,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel centerPanel;
+    private javax.swing.JMenuItem clearMenuItem;
     private javax.swing.JLabel extraPointsLabel;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem greedyMenuItem;
