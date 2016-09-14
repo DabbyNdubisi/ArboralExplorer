@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.Random;
 import javax.swing.JOptionPane;
 
-public class MainFrame extends javax.swing.JFrame {
+public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
 
-    public DrawPanel drawPanel;
+    public final DrawPanel drawPanel;
 
     /**
      * Creates new form MainFrame
@@ -36,8 +36,29 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
 
         drawPanel = new DrawPanel();
+        drawPanel.addChangeListener(this);
         drawPanel.setPreferredSize(new Dimension(1000, 600));
         centerPanel.add(drawPanel, BorderLayout.CENTER);
+    }
+
+    @Override
+    public void gridChanged(DrawPanel source, GridSet newGrid) {
+        int numGround = 0, total = 0;
+
+        for (int i = 0; i < newGrid.getWidth(); i++) {
+            for (int j = 0; j < newGrid.getHeight(); j++) {
+                if (newGrid.hasPoint(i, j)) {
+                    total++;
+
+                    if (newGrid.isGroundSet(i, j)) {
+                        numGround++;
+                    }
+                }
+            }
+        }
+
+        groundSetSizeLabel.setText("Ground Set: " + numGround);
+        extraPointsLabel.setText("Additional: " + (total - numGround));
     }
 
     /**

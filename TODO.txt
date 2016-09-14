@@ -15,7 +15,7 @@ X GridSet computes violations / critical / etc.\
 X Algorithms take and return a GridSet
 
 X Add listeners to GridSet
-- Count blue / black points
+X Count blue / black points
 - Clear black points
 - Dumb opt
 - Color violated rectangles
