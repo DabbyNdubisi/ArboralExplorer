@@ -16,6 +16,7 @@
 package arboralexplorer.gui;
 
 import arboralexplorer.algo.GreedyASS;
+import arboralexplorer.data.GridSet;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -178,7 +179,7 @@ public class MainFrame extends javax.swing.JFrame {
         int n = 0, m = 0;
 
         do {
-            String response = (String) JOptionPane.showInputDialog(this, "Specify n and m (e.g. \"7 4\"):", "Arboral Explorer", JOptionPane.QUESTION_MESSAGE, null, null, drawPanel.getGrid().length + " " + drawPanel.getGrid()[0].length);
+            String response = (String) JOptionPane.showInputDialog(this, "Specify n and m (e.g. \"7 4\"):", "Arboral Explorer", JOptionPane.QUESTION_MESSAGE, null, null, drawPanel.getGrid().getWidth() + " " + drawPanel.getGrid().getHeight());
 
             if (response == null || response.isEmpty()) {
                 return;
@@ -197,11 +198,11 @@ public class MainFrame extends javax.swing.JFrame {
             }
         } while (n <= 0 || m <= 0);
 
-        drawPanel.setGrid(new boolean[n][m]);
+        drawPanel.setGrid(new GridSet(new boolean[n][m]));
     }//GEN-LAST:event_newMenuItemActionPerformed
 
     private void randomPermutationMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomPermutationMenuItemActionPerformed
-        int n = drawPanel.getGrid().length;
+        int n = drawPanel.getGrid().getWidth();
 
         if (n > 0) {
             List<Integer> permutation = new ArrayList<>(n);
@@ -212,22 +213,21 @@ public class MainFrame extends javax.swing.JFrame {
 
             Collections.shuffle(permutation);
 
-            boolean[][] newGrid = new boolean[n][drawPanel.getGrid()[0].length];
+            boolean[][] newGrid = new boolean[n][drawPanel.getGrid().getHeight()];
 
             for (int j = 0; j < newGrid[0].length; j++) {
                 newGrid[permutation.get(j % n)][j] = true;
             }
 
-            drawPanel.setGrid(newGrid);
-            drawPanel.setGroundSet(newGrid);
+            drawPanel.setGrid(new GridSet(newGrid));
         }
     }//GEN-LAST:event_randomPermutationMenuItemActionPerformed
 
     private void randomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomMenuItemActionPerformed
-        int n = drawPanel.getGrid().length;
+        int n = drawPanel.getGrid().getWidth();
 
         if (n > 0) {
-            int m = drawPanel.getGrid()[0].length;
+            int m = drawPanel.getGrid().getHeight();
             boolean[][] newGrid = new boolean[n][m];
             Random rand = new Random();
 
@@ -235,16 +235,12 @@ public class MainFrame extends javax.swing.JFrame {
                 newGrid[rand.nextInt(n)][j] = true;
             }
 
-            drawPanel.setGrid(newGrid);
-            drawPanel.setGroundSet(newGrid);
+            drawPanel.setGrid(new GridSet(newGrid));
         }
     }//GEN-LAST:event_randomMenuItemActionPerformed
 
     private void greedyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_greedyMenuItemActionPerformed
-        boolean[][] groundSet = drawPanel.getGroundSet();
-
-        drawPanel.setGrid(GreedyASS.solve(groundSet));
-        drawPanel.setGroundSet(groundSet);
+        drawPanel.setGrid(GreedyASS.solve(drawPanel.getGrid()));
     }//GEN-LAST:event_greedyMenuItemActionPerformed
 
     /**

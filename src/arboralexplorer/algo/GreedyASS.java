@@ -15,6 +15,7 @@
  */
 package arboralexplorer.algo;
 
+import arboralexplorer.data.GridSet;
 import java.util.Arrays;
 
 /**
@@ -29,12 +30,8 @@ public class GreedyASS {
      * @param grid
      * @return
      */
-    public static boolean[][] solve(boolean[][] grid) {
-        if (grid.length == 0) {
-            return grid;
-        }
-
-        int width = grid.length, height = grid[0].length;
+    public static GridSet solve(GridSet grid) {
+        int width = grid.getWidth(), height = grid.getHeight();
         boolean[][] newGrid = new boolean[width][height];
 
         int[] lowestPoint = new int[width];
@@ -42,14 +39,14 @@ public class GreedyASS {
 
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
-                if (grid[i][j]) {
+                if (grid.isGroundSet(i, j)) {
                     newGrid[i][j] = true;
 
                     // Scan left
                     int lowest = lowestPoint[i];
 
                     if (lowest != j + 1) {
-                        for (int k = i - 1; k >= 0 && !grid[k][j]; k--) {
+                        for (int k = i - 1; k >= 0 && !grid.isGroundSet(k, j); k--) {
                             if (lowestPoint[k] > lowest) {
                                 lowest = lowestPoint[k];
                                 newGrid[k][j] = true;
@@ -62,7 +59,7 @@ public class GreedyASS {
                     lowest = lowestPoint[i];
 
                     if (lowest != j + 1) {
-                        for (int k = i + 1; k < width && !grid[k][j]; k++) {
+                        for (int k = i + 1; k < width && !grid.isGroundSet(k, j); k++) {
                             if (lowestPoint[k] > lowest) {
                                 lowest = lowestPoint[k];
                                 newGrid[k][j] = true;
@@ -76,6 +73,6 @@ public class GreedyASS {
             }
         }
 
-        return newGrid;
+        return new GridSet(newGrid, grid.getGroundSet());
     }
 }
