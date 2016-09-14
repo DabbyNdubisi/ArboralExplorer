@@ -1,0 +1,30 @@
+X Draw grid
+X Click on cell to place point
+X Test for ASS
+X Specify ground set
+X Show ASS violations
+X Add points
+X Remove points
+X Generate random query set
+X Generate random permutation
+X Run greedyASS
+
+- Move data and violations into GridSet
+- Add listeneres to GridSet
+- GridSet computes violations / critical / etc.\
+- Algorithms take and return a GridSet
+
+- Count blue / black points
+- Clear black points
+- Dumb opt
+- Color violated rectangles
+
+- Find all (sub-/super-/critical) points
+- Check if one point is critical
+- Show subcritical/critical/supercritical
+- Show legal/illegal
+- Flip critical points?
+- Show flip on hover?
+
+
+- Github
