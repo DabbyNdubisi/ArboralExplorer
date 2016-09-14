@@ -15,9 +15,10 @@
  */
 package arboralexplorer.gui;
 
+import arboralexplorer.data.GridSet;
+
 public interface SetChangeListener {
 
-    public void pointAdded(DrawPanel source, int i, int j, boolean[][] newGrid);
-    public void pointRemoved(DrawPanel source, int i, int j, boolean[][] newGrid);
+    public void gridChanged(DrawPanel source, GridSet newGrid);
 
 }

@@ -9,11 +9,12 @@ X Generate random query set
 X Generate random permutation
 X Run greedyASS
 
-- Move data and violations into GridSet
-- Add listeneres to GridSet
-- GridSet computes violations / critical / etc.\
-- Algorithms take and return a GridSet
+X Upload to Github
+X Move data and violations into GridSet
+X GridSet computes violations / critical / etc.\
+X Algorithms take and return a GridSet
 
+X Add listeners to GridSet
 - Count blue / black points
 - Clear black points
 - Dumb opt
@@ -25,6 +26,3 @@ X Run greedyASS
 - Show legal/illegal
 - Flip critical points?
 - Show flip on hover?
-
-
-- Github

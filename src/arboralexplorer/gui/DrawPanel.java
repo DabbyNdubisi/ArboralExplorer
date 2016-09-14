@@ -16,7 +16,6 @@
 package arboralexplorer.gui;
 
 import arboralexplorer.Pair;
-import arboralexplorer.algo.ArboralChecker;
 import arboralexplorer.data.GridSet;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -30,6 +29,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 
@@ -44,6 +44,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private int mouseY = 0;
     // The grid
     private GridSet grid;
+    private List<SetChangeListener> changeListeners;
 
     public DrawPanel() {
         initialize();
@@ -60,6 +61,15 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         addKeyListener(this);
 
         grid = new GridSet(new boolean[6][6]);
+        changeListeners = new ArrayList<>();
+    }
+
+    public void addChangeListener(SetChangeListener listener) {
+        changeListeners.add(listener);
+    }
+
+    public void removeChangeListener(SetChangeListener listener) {
+        changeListeners.remove(listener);
     }
 
     public GridSet getGrid() {
@@ -73,6 +83,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
         this.grid = grid;
         zoomToFit();
+        notifyChangeListeners();
     }
 
     public void zoomToFit() {
@@ -189,6 +200,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
                     grid.addPoint(i, j);
                 }
 
+                notifyChangeListeners();
                 repaint();
             }
         } else if (e.getButton() == MouseEvent.BUTTON3) {
@@ -296,6 +308,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
                 }
             }
 
+            notifyChangeListeners();
             repaint();
         }
     }
@@ -306,5 +319,11 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
     private boolean inGrid(int i, int j) {
         return 0 <= i && i < grid.getWidth() && 0 <= j && j < grid.getHeight();
+    }
+
+    private void notifyChangeListeners() {
+        for (SetChangeListener changeListener : changeListeners) {
+            changeListener.gridChanged(this, grid);
+        }
     }
 }
