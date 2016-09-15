@@ -144,8 +144,24 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         g.drawOval(xWorldToScreen(x - POINT_RADIUS), yWorldToScreen(y - POINT_RADIUS), size, size);
     }
 
+    private void fillViolation(Graphics g, Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> violation) {
+        int x1 = violation.getFirst().getFirst();
+        int y1 = violation.getFirst().getSecond();
+        int x2 = violation.getSecond().getFirst();
+        int y2 = violation.getSecond().getSecond();
+        
+        g.setColor(new Color(255, 32, 32, 32));
+        g.fillRect(xWorldToScreen(Math.min(x1, x2) + 0.1), yWorldToScreen(Math.min(y1, y2) + 0.1), (int) Math.round((Math.abs(x1 - x2) - 0.2) / zoomfactor), (int) Math.round((Math.abs(y1 - y2) - 0.2) / zoomfactor));
+    }
+    
     private void drawViolation(Graphics g, Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> violation) {
-        drawLine(g, violation.getFirst().getFirst(), violation.getFirst().getSecond(), violation.getSecond().getFirst(), violation.getSecond().getSecond());
+        int x1 = violation.getFirst().getFirst();
+        int y1 = violation.getFirst().getSecond();
+        int x2 = violation.getSecond().getFirst();
+        int y2 = violation.getSecond().getSecond();
+        
+        g.setColor(Color.red);
+        drawLine(g, x1, y1, x2, y2);
     }
 
     @Override
@@ -154,6 +170,11 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         g.fillRect(0, 0, getWidth(), getHeight());
         ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+        // Fill violation rectangles
+        for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> violation : grid.getViolations()) {
+            fillViolation(g, violation);
+        }
+        
         // Draw the grid
         int width = grid.getWidth();
         int height = grid.getHeight();
@@ -167,7 +188,6 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         }
 
         // Draw violations
-        g.setColor(Color.red);
         for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> violation : grid.getViolations()) {
             drawViolation(g, violation);
         }
