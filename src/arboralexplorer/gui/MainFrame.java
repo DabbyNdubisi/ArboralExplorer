@@ -94,7 +94,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         stupidOptMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Graph Editor");
+        setTitle("Arboral Explorer");
 
         centerPanel.setPreferredSize(new java.awt.Dimension(800, 600));
         centerPanel.setLayout(new java.awt.BorderLayout());
