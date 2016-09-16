@@ -46,9 +46,17 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="pointSetMenu">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Point Set"/>
+            <Property name="text" type="java.lang.String" value="Ground Set"/>
           </Properties>
           <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="fixGroundMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Use Current Points"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fixGroundMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="randomMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Random"/>

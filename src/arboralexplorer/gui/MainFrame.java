@@ -80,6 +80,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         openMenuItem = new javax.swing.JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
         pointSetMenu = new javax.swing.JMenu();
+        fixGroundMenuItem = new javax.swing.JMenuItem();
         randomMenuItem = new javax.swing.JMenuItem();
         randomPermutationMenuItem = new javax.swing.JMenuItem();
         solveMenu = new javax.swing.JMenu();
@@ -152,7 +153,15 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
 
         menuBar.add(fileMenu);
 
-        pointSetMenu.setText("Point Set");
+        pointSetMenu.setText("Ground Set");
+
+        fixGroundMenuItem.setText("Use Current Points");
+        fixGroundMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fixGroundMenuItemActionPerformed(evt);
+            }
+        });
+        pointSetMenu.add(fixGroundMenuItem);
 
         randomMenuItem.setText("Random");
         randomMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -279,6 +288,10 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         drawPanel.setGrid(new GridSet(drawPanel.getGrid().getGroundSet()));
     }//GEN-LAST:event_clearMenuItemActionPerformed
 
+    private void fixGroundMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fixGroundMenuItemActionPerformed
+        drawPanel.setGrid(new GridSet(drawPanel.getGrid().getGridSet()));
+    }//GEN-LAST:event_fixGroundMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -292,6 +305,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JMenuItem clearMenuItem;
     private javax.swing.JLabel extraPointsLabel;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenuItem fixGroundMenuItem;
     private javax.swing.JMenuItem greedyMenuItem;
     private javax.swing.JLabel groundSetSizeLabel;
     private javax.swing.JMenuBar menuBar;
