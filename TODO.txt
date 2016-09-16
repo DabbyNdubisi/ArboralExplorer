@@ -16,13 +16,19 @@ X Algorithms take and return a GridSet
 
 X Add listeners to GridSet
 X Count blue / black points
-- Clear black points
-- Dumb opt
-- Color violated rectangles
+X Clear black points
+X Color violated rectangles
+- Dumb opt?
+- Smart opt (ILP)
 
 - Find all (sub-/super-/critical) points
 - Check if one point is critical
 - Show subcritical/critical/supercritical
 - Show legal/illegal
-- Flip critical points?
-- Show flip on hover?
+
+- LP lower bound
+- Paper's LBs (SignedGreedy)
+- Best Independant rect lower bound?
+
+- Splay upper bound
+- Best static tree
