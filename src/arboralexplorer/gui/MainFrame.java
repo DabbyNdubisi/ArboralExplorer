@@ -15,7 +15,7 @@
  */
 package arboralexplorer.gui;
 
-import arboralexplorer.algo.GreedyASS;
+import arboralexplorer.algo.upperbound.GreedyASS;
 import arboralexplorer.data.GridSet;
 import java.awt.BorderLayout;
 import java.awt.Dimension;

@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package arboralexplorer.algo;
+package arboralexplorer.algo.upperbound;
 
 import arboralexplorer.data.GridSet;
 import java.util.Arrays;
 
-/**
- *
- * @author Sander Verdonschot <sander.verdonschot at gmail.com>
- */
 public class GreedyASS {
 
     /**
