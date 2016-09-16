@@ -18,7 +18,7 @@ X Add listeners to GridSet
 X Count blue / black points
 X Clear black points
 X Color violated rectangles
-- Dumb opt?
+X Dumb opt?
 - Smart opt (ILP)
 
 - Find all (sub-/super-/critical) points
@@ -31,4 +31,4 @@ X Color violated rectangles
 - Best Independant rect lower bound?
 
 - Splay upper bound
-- Best static tree
+X Best static tree

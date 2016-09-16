@@ -193,7 +193,7 @@ public class GridSet {
         violations = null;
     }
 
-    private boolean[][] copyGrid(boolean[][] grid) {
+    public static boolean[][] copyGrid(boolean[][] grid) {
         if (grid.length == 0) {
             return new boolean[0][0];
         } else {

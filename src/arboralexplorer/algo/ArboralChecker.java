@@ -28,6 +28,11 @@ public class ArboralChecker {
         return getAllAssViolations(grid).isEmpty();
     }
 
+    public static boolean isArborallySatisfied(boolean[][] grid) {
+        // Can be made smarter
+        return getAllAssViolations(grid).isEmpty();
+    }
+
     public static List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getAllAssViolations(GridSet grid) {
         List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> violations = new ArrayList<>();
 
@@ -55,6 +60,48 @@ public class ArboralChecker {
 
                     if (lowest != j + 1) {
                         for (int k = i + 1; k < width && !grid.hasPoint(k, j); k++) {
+                            if (lowestPoint[k] > lowest) {
+                                violations.add(new Pair<>(new Pair<>(i, j), new Pair<>(k, lowestPoint[k])));
+                                lowest = lowestPoint[k];
+                            }
+                        }
+                    }
+
+                    lowestPoint[i] = j;
+                }
+            }
+        }
+
+        return violations;
+    }
+
+    public static List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getAllAssViolations(boolean[][] grid) {
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> violations = new ArrayList<>();
+
+        int width = grid.length, height = grid[0].length;
+        int[] lowestPoint = new int[width];
+        Arrays.fill(lowestPoint, -1);
+
+        for (int j = 0; j < height; j++) {
+            for (int i = 0; i < width; i++) {
+                if (grid[i][j]) {
+                    // Scan left
+                    int lowest = lowestPoint[i];
+
+                    if (lowest != j + 1) {
+                        for (int k = i - 1; k >= 0 && !grid[k][j]; k--) {
+                            if (lowestPoint[k] > lowest) {
+                                violations.add(new Pair<>(new Pair<>(k, lowestPoint[k]), new Pair<>(i, j)));
+                                lowest = lowestPoint[k];
+                            }
+                        }
+                    }
+
+                    // Scan right
+                    lowest = lowestPoint[i];
+
+                    if (lowest != j + 1) {
+                        for (int k = i + 1; k < width && !grid[k][j]; k++) {
                             if (lowestPoint[k] > lowest) {
                                 violations.add(new Pair<>(new Pair<>(i, j), new Pair<>(k, lowestPoint[k])));
                                 lowest = lowestPoint[k];

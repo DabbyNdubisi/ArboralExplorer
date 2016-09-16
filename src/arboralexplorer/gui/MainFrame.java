@@ -18,6 +18,7 @@ package arboralexplorer.gui;
 import arboralexplorer.algo.upperbound.GreedyASS;
 import arboralexplorer.algo.upperbound.OptStaticTree;
 import arboralexplorer.algo.upperbound.StaticBalancedTree;
+import arboralexplorer.algo.upperbound.StupidOpt;
 import arboralexplorer.data.GridSet;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -90,6 +91,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         greedyMenuItem = new javax.swing.JMenuItem();
         staticBalancedMenuItem = new javax.swing.JMenuItem();
         optStaticTreeMenuItem = new javax.swing.JMenuItem();
+        stupidOptMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Graph Editor");
@@ -221,6 +223,14 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         });
         solveMenu.add(optStaticTreeMenuItem);
 
+        stupidOptMenuItem.setText("Super slow opt");
+        stupidOptMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stupidOptMenuItemActionPerformed(evt);
+            }
+        });
+        solveMenu.add(stupidOptMenuItem);
+
         menuBar.add(solveMenu);
 
         setJMenuBar(menuBar);
@@ -320,6 +330,10 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         drawPanel.setGrid(OptStaticTree.solve(drawPanel.getGrid()));
     }//GEN-LAST:event_optStaticTreeMenuItemActionPerformed
 
+    private void stupidOptMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stupidOptMenuItemActionPerformed
+        drawPanel.setGrid(StupidOpt.solve(drawPanel.getGrid()));
+    }//GEN-LAST:event_stupidOptMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -347,5 +361,6 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JMenu solveMenu;
     private javax.swing.JMenuItem staticBalancedMenuItem;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JMenuItem stupidOptMenuItem;
     // End of variables declaration//GEN-END:variables
 }
