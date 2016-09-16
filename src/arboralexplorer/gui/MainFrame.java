@@ -16,6 +16,7 @@
 package arboralexplorer.gui;
 
 import arboralexplorer.algo.upperbound.GreedyASS;
+import arboralexplorer.algo.upperbound.StaticBalancedTree;
 import arboralexplorer.data.GridSet;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -86,6 +87,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         solveMenu = new javax.swing.JMenu();
         clearMenuItem = new javax.swing.JMenuItem();
         greedyMenuItem = new javax.swing.JMenuItem();
+        staticBalancedMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Graph Editor");
@@ -201,6 +203,14 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         });
         solveMenu.add(greedyMenuItem);
 
+        staticBalancedMenuItem.setText("Static Balanced BST");
+        staticBalancedMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                staticBalancedMenuItemActionPerformed(evt);
+            }
+        });
+        solveMenu.add(staticBalancedMenuItem);
+
         menuBar.add(solveMenu);
 
         setJMenuBar(menuBar);
@@ -292,6 +302,10 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         drawPanel.setGrid(new GridSet(drawPanel.getGrid().getGridSet()));
     }//GEN-LAST:event_fixGroundMenuItemActionPerformed
 
+    private void staticBalancedMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_staticBalancedMenuItemActionPerformed
+        drawPanel.setGrid(StaticBalancedTree.solve(drawPanel.getGrid()));
+    }//GEN-LAST:event_staticBalancedMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -316,6 +330,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JMenuItem randomPermutationMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JMenu solveMenu;
+    private javax.swing.JMenuItem staticBalancedMenuItem;
     private javax.swing.JPanel statusPanel;
     // End of variables declaration//GEN-END:variables
 }
