@@ -16,6 +16,7 @@
 package arboralexplorer.gui;
 
 import arboralexplorer.algo.upperbound.GreedyASS;
+import arboralexplorer.algo.upperbound.OptStaticTree;
 import arboralexplorer.algo.upperbound.StaticBalancedTree;
 import arboralexplorer.data.GridSet;
 import java.awt.BorderLayout;
@@ -88,6 +89,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         clearMenuItem = new javax.swing.JMenuItem();
         greedyMenuItem = new javax.swing.JMenuItem();
         staticBalancedMenuItem = new javax.swing.JMenuItem();
+        optStaticTreeMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Graph Editor");
@@ -211,6 +213,14 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         });
         solveMenu.add(staticBalancedMenuItem);
 
+        optStaticTreeMenuItem.setText("Opt Static Tree");
+        optStaticTreeMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                optStaticTreeMenuItemActionPerformed(evt);
+            }
+        });
+        solveMenu.add(optStaticTreeMenuItem);
+
         menuBar.add(solveMenu);
 
         setJMenuBar(menuBar);
@@ -306,6 +316,10 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         drawPanel.setGrid(StaticBalancedTree.solve(drawPanel.getGrid()));
     }//GEN-LAST:event_staticBalancedMenuItemActionPerformed
 
+    private void optStaticTreeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optStaticTreeMenuItemActionPerformed
+        drawPanel.setGrid(OptStaticTree.solve(drawPanel.getGrid()));
+    }//GEN-LAST:event_optStaticTreeMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -325,6 +339,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;
+    private javax.swing.JMenuItem optStaticTreeMenuItem;
     private javax.swing.JMenu pointSetMenu;
     private javax.swing.JMenuItem randomMenuItem;
     private javax.swing.JMenuItem randomPermutationMenuItem;
