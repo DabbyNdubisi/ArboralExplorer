@@ -26,21 +26,29 @@ public class StupidOpt {
 
     /**
      * Returns a superset of the given grid without ASS-violations. This is
-     * super slow, as it tries ALL supersets.
+     * super slow, as it tries ALL supersets (modulo a little pruning).
      *
      * @param grid
      * @return
      */
     public static GridSet solve(GridSet grid) {
-        Pair<boolean[][], Integer> minAss = getMinimumASS(grid.getGroundSet(), grid.getGroundSet(), 0, 0, 0, ArboralChecker.getAllAssViolations(grid));
+        // Compute a reasonable upper bound
+        GridSet greedySolution = GreedyASS.solve(grid);
+        int greedy = greedySolution.getSize() - greedySolution.getGroundSetSize();
+        
+        // Compute the optimum
+        Pair<boolean[][], Integer> minAss = getMinimumASS(grid.getGroundSet(), grid.getGroundSet(), 0, greedy + 1, 0, 0, ArboralChecker.getAllAssViolations(grid));
         return new GridSet(minAss.getFirst(), grid.getGroundSet());
     }
 
-    private static Pair<boolean[][], Integer> getMinimumASS(boolean[][] groundSet, boolean[][] newGrid, int addedPoints, int i, int j, List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> violations) {
+    private static Pair<boolean[][], Integer> getMinimumASS(boolean[][] groundSet, boolean[][] newGrid, int addedPoints, int bestBound, int i, int j, List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> violations) {
+        if (addedPoints >= bestBound) {
+            return new Pair<>(null, Integer.MAX_VALUE);
+        }
         if (violations.isEmpty() && ArboralChecker.isArborallySatisfied(newGrid)) {
             return new Pair<>(GridSet.copyGrid(newGrid), addedPoints);
         }
-        if (i == groundSet.length - 1 && j == groundSet[0].length - 1) {
+        if ((i == groundSet.length - 1 && j == groundSet[0].length - 1) || addedPoints == bestBound - 1) {
             return new Pair<>(null, Integer.MAX_VALUE);
         }
 
@@ -48,10 +56,10 @@ public class StupidOpt {
         int nextJ = (i == groundSet.length - 1 ? j + 1 : j);
 
         if (groundSet[i][j]) {
-            return getMinimumASS(groundSet, newGrid, addedPoints, nextI, nextJ, violations);
+            return getMinimumASS(groundSet, newGrid, addedPoints, bestBound, nextI, nextJ, violations);
         }
 
-        Pair<boolean[][], Integer> minAssWithout = getMinimumASS(groundSet, newGrid, addedPoints, nextI, nextJ, violations);
+        Pair<boolean[][], Integer> minAssWithout = getMinimumASS(groundSet, newGrid, addedPoints, bestBound, nextI, nextJ, violations);
 
         // Add the point (i, j)
         newGrid[i][j] = true;
@@ -72,7 +80,7 @@ public class StupidOpt {
             }
         }
 
-        Pair<boolean[][], Integer> minAssWith = getMinimumASS(groundSet, newGrid, addedPoints + 1, nextI, nextJ, violations);
+        Pair<boolean[][], Integer> minAssWith = getMinimumASS(groundSet, newGrid, addedPoints + 1, Math.min(bestBound, minAssWithout.getSecond()), nextI, nextJ, violations);
 
         // Restore state
         newGrid[i][j] = false;
