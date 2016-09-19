@@ -46,22 +46,8 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
 
     @Override
     public void gridChanged(DrawPanel source, GridSet newGrid) {
-        int numGround = 0, total = 0;
-
-        for (int i = 0; i < newGrid.getWidth(); i++) {
-            for (int j = 0; j < newGrid.getHeight(); j++) {
-                if (newGrid.hasPoint(i, j)) {
-                    total++;
-
-                    if (newGrid.isGroundSet(i, j)) {
-                        numGround++;
-                    }
-                }
-            }
-        }
-
-        groundSetSizeLabel.setText("Ground Set: " + numGround);
-        extraPointsLabel.setText("Additional: " + (total - numGround));
+        groundSetSizeLabel.setText("Ground Set: " + newGrid.getGroundSetSize());
+        extraPointsLabel.setText("Additional: " + (newGrid.getSize() - newGrid.getGroundSetSize()));
     }
 
     /**

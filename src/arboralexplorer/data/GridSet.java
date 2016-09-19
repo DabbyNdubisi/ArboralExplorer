@@ -21,9 +21,13 @@ import java.util.List;
 
 public class GridSet {
 
+    private final static int INVALID = -1;
+
     private final boolean[][] gridSet;
     private final boolean[][] groundSet;
     private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> violations = null;
+    private int size = INVALID;
+    private int groundSetSize = INVALID;
 
     public GridSet(boolean[][] groundSet) {
         this(groundSet, groundSet);
@@ -130,8 +134,14 @@ public class GridSet {
             invalidate();
         }
 
-        gridSet[i][j] = true;
-        groundSet[i][j] = true;
+        if (!groundSet[i][j]) {
+            gridSet[i][j] = true;
+            groundSet[i][j] = true;
+            
+            if (groundSetSize != INVALID) {
+                groundSetSize++;
+            }
+        }
     }
 
     /**
@@ -142,7 +152,13 @@ public class GridSet {
      * @param j
      */
     public void removeFromGroundSet(int i, int j) {
-        groundSet[i][j] = false;
+        if (groundSet[i][j]) {
+            groundSet[i][j] = false;
+
+            if (groundSetSize != INVALID) {
+                groundSetSize--;
+            }
+        }
     }
 
     /**
@@ -189,8 +205,53 @@ public class GridSet {
         return violations;
     }
 
+    /**
+     * Returns the total number of points in this grid set.
+     *
+     * @return
+     */
+    public int getSize() {
+        if (size == INVALID) {
+            computeSize();
+        }
+
+        return size;
+    }
+
+    /**
+     * Returns the number of points in the ground set of this grid set.
+     *
+     * @return
+     */
+    public int getGroundSetSize() {
+        if (groundSetSize == INVALID) {
+            computeSize();
+        }
+
+        return groundSetSize;
+    }
+
     private void invalidate() {
         violations = null;
+        size = INVALID;
+        groundSetSize = INVALID;
+    }
+
+    private void computeSize() {
+        size = 0;
+        groundSetSize = 0;
+
+        for (int i = 0; i < gridSet.length; i++) {
+            for (int j = 0; j < gridSet[0].length; j++) {
+                if (gridSet[i][j]) {
+                    size++;
+
+                    if (groundSet[i][j]) {
+                        groundSetSize++;
+                    }
+                }
+            }
+        }
     }
 
     public static boolean[][] copyGrid(boolean[][] grid) {
