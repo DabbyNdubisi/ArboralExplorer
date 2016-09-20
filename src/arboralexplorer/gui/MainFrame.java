@@ -16,16 +16,20 @@
 package arboralexplorer.gui;
 
 import arboralexplorer.algo.upperbound.GreedyASS;
+import arboralexplorer.algo.upperbound.ILPSolver;
 import arboralexplorer.algo.upperbound.OptStaticTree;
 import arboralexplorer.algo.upperbound.StaticBalancedTree;
 import arboralexplorer.algo.upperbound.StupidOpt;
 import arboralexplorer.data.GridSet;
+import jCMPL.CmplException;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
@@ -78,6 +82,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         staticBalancedMenuItem = new javax.swing.JMenuItem();
         optStaticTreeMenuItem = new javax.swing.JMenuItem();
         stupidOptMenuItem = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Arboral Explorer");
@@ -217,6 +222,14 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         });
         solveMenu.add(stupidOptMenuItem);
 
+        jMenuItem1.setText("ILP Opt");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        solveMenu.add(jMenuItem1);
+
         menuBar.add(solveMenu);
 
         setJMenuBar(menuBar);
@@ -320,6 +333,14 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         drawPanel.setGrid(StupidOpt.solve(drawPanel.getGrid()));
     }//GEN-LAST:event_stupidOptMenuItemActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        try {
+            drawPanel.setGrid(ILPSolver.solve(drawPanel.getGrid()));
+        } catch (CmplException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -336,6 +357,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JMenuItem fixGroundMenuItem;
     private javax.swing.JMenuItem greedyMenuItem;
     private javax.swing.JLabel groundSetSizeLabel;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;

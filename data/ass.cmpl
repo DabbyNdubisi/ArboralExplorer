@@ -1,7 +1,4 @@
-parameters:
-        n := 10;
-        m := 10;
-        ground := set([4,1],[6,2],[9,3],[10,4],[2,5],[1,6],[8,7],[7,8],[5,9],[3,10]);
+%data : n, m, ground set[2]
 
 variables:
 	x[1..n,1..m]: binary;
