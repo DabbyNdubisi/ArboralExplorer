@@ -53,4 +53,7 @@ public class LinearProgramLB {
         return new GridSet(CmplUtils.extractSolution(model, grid.getWidth(), grid.getHeight()), grid.getGroundSet());
     }
 
+    private LinearProgramLB() {
+    }
+
 }

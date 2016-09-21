@@ -52,8 +52,8 @@ public class CmplUtils {
                 int i = Integer.parseInt(match.group(1)) - 1;
                 int j = Integer.parseInt(match.group(2)) - 1;
                 
-                if (v.activity() instanceof Integer) {
-                    solution[i][j] = ((Double) v.activity()) > 0;
+                if (v.activity() instanceof Long) {
+                    solution[i][j] = ((Long) v.activity()) > 0;
                 } else if (v.activity() instanceof Double) {
                     solution[i][j] = ((Double) v.activity()) > 0;
                 } else {
