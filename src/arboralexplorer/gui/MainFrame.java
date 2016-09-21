@@ -32,8 +32,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.awt.Cursor;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
 
@@ -83,16 +81,20 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         randomPermutationMenuItem = new javax.swing.JMenuItem();
         solveMenu = new javax.swing.JMenu();
         clearMenuItem = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         greedyMenuItem = new javax.swing.JMenuItem();
+        ilpOptMenuItem = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
         staticBalancedMenuItem = new javax.swing.JMenuItem();
         optStaticTreeMenuItem = new javax.swing.JMenuItem();
         stupidOptMenuItem = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        lowerboundMenu = new javax.swing.JMenu();
+        lplbMenuItem = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
         signedPositiveGreedyMenuItem = new javax.swing.JMenuItem();
         signedNegativeGreedyMenuItem = new javax.swing.JMenuItem();
         signedUnionGreedyMenuItem = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        bestSignedGreedyMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Arboral Explorer");
@@ -199,6 +201,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
             }
         });
         solveMenu.add(clearMenuItem);
+        solveMenu.add(jSeparator1);
 
         greedyMenuItem.setText("GreedyASS");
         greedyMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -207,6 +210,15 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
             }
         });
         solveMenu.add(greedyMenuItem);
+
+        ilpOptMenuItem.setText("ILP Opt");
+        ilpOptMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ilpOptMenuItemActionPerformed(evt);
+            }
+        });
+        solveMenu.add(ilpOptMenuItem);
+        solveMenu.add(jSeparator2);
 
         staticBalancedMenuItem.setText("Static Balanced BST");
         staticBalancedMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -232,13 +244,18 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         });
         solveMenu.add(stupidOptMenuItem);
 
-        jMenuItem1.setText("ILP Opt");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        menuBar.add(solveMenu);
+
+        lowerboundMenu.setText("Lower Bound");
+
+        lplbMenuItem.setText("Linear Program");
+        lplbMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                lplbMenuItemActionPerformed(evt);
             }
         });
-        solveMenu.add(jMenuItem1);
+        lowerboundMenu.add(lplbMenuItem);
+        lowerboundMenu.add(jSeparator3);
 
         signedPositiveGreedyMenuItem.setText("Signed Positive Greedy");
         signedPositiveGreedyMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -246,7 +263,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
                 signedPositiveGreedyMenuItemActionPerformed(evt);
             }
         });
-        solveMenu.add(signedPositiveGreedyMenuItem);
+        lowerboundMenu.add(signedPositiveGreedyMenuItem);
 
         signedNegativeGreedyMenuItem.setText("Signed Negative Greedy");
         signedNegativeGreedyMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -254,7 +271,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
                 signedNegativeGreedyMenuItemActionPerformed(evt);
             }
         });
-        solveMenu.add(signedNegativeGreedyMenuItem);
+        lowerboundMenu.add(signedNegativeGreedyMenuItem);
 
         signedUnionGreedyMenuItem.setText("Signed Union Greedy");
         signedUnionGreedyMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -262,21 +279,17 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
                 signedUnionGreedyMenuItemActionPerformed(evt);
             }
         });
-        solveMenu.add(signedUnionGreedyMenuItem);
+        lowerboundMenu.add(signedUnionGreedyMenuItem);
 
-        menuBar.add(solveMenu);
-
-        jMenu1.setText("Lower Bound");
-
-        jMenuItem2.setText("Linear Program");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        bestSignedGreedyMenuItem.setText("Best Signed Greedy");
+        bestSignedGreedyMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                bestSignedGreedyMenuItemActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem2);
+        lowerboundMenu.add(bestSignedGreedyMenuItem);
 
-        menuBar.add(jMenu1);
+        menuBar.add(lowerboundMenu);
 
         setJMenuBar(menuBar);
 
@@ -404,13 +417,15 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         stupid.execute();
     }//GEN-LAST:event_stupidOptMenuItemActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void ilpOptMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ilpOptMenuItemActionPerformed
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         try {
             drawPanel.setGrid(ILPSolver.solve(drawPanel.getGrid()));
         } catch (CmplException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_ilpOptMenuItemActionPerformed
 
     private void signedPositiveGreedyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signedPositiveGreedyMenuItemActionPerformed
         drawPanel.setGrid(SignedGreedy.solve(SignedGreedy.Sign.Positive, drawPanel.getGrid()));
@@ -424,13 +439,26 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         drawPanel.setGrid(SignedGreedy.solveSignedUnion(drawPanel.getGrid()));
     }//GEN-LAST:event_signedUnionGreedyMenuItemActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void lplbMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lplbMenuItemActionPerformed
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         try {
             drawPanel.setGrid(LinearProgramLB.solve(drawPanel.getGrid()));
         } catch (CmplException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_lplbMenuItemActionPerformed
+
+    private void bestSignedGreedyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bestSignedGreedyMenuItemActionPerformed
+        GridSet positive = SignedGreedy.solve(SignedGreedy.Sign.Positive, drawPanel.getGrid());
+        GridSet negative = SignedGreedy.solve(SignedGreedy.Sign.Negative, drawPanel.getGrid());
+        
+        if (positive.getSize() > negative.getSize()) {
+            drawPanel.setGrid(positive);
+        } else {
+            drawPanel.setGrid(negative);
+        }
+    }//GEN-LAST:event_bestSignedGreedyMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -441,6 +469,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem bestSignedGreedyMenuItem;
     private javax.swing.JPanel centerPanel;
     private javax.swing.JMenuItem clearMenuItem;
     private javax.swing.JLabel extraPointsLabel;
@@ -448,9 +477,12 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JMenuItem fixGroundMenuItem;
     private javax.swing.JMenuItem greedyMenuItem;
     private javax.swing.JLabel groundSetSizeLabel;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem ilpOptMenuItem;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JMenu lowerboundMenu;
+    private javax.swing.JMenuItem lplbMenuItem;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;
