@@ -22,11 +22,14 @@ import arboralexplorer.algo.upperbound.StupidOpt;
 import arboralexplorer.data.GridSet;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.awt.Cursor;
 import javax.swing.JOptionPane;
+import javax.swing.ProgressMonitor;
 
 public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
 
@@ -317,7 +320,32 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     }//GEN-LAST:event_optStaticTreeMenuItemActionPerformed
 
     private void stupidOptMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stupidOptMenuItemActionPerformed
-        drawPanel.setGrid(StupidOpt.solve(drawPanel.getGrid()));
+        ProgressMonitor progressMonitor = new ProgressMonitor(MainFrame.this, "Trying all subsets.", "", 0, 100);
+        progressMonitor.setProgress(0);
+        progressMonitor.setMillisToDecideToPopup(100);
+        progressMonitor.setMillisToPopup(400);
+
+        StupidOpt stupid = new StupidOpt(drawPanel, drawPanel.getGrid());
+        stupid.addPropertyChangeListener((PropertyChangeEvent e) -> {
+            if ("progress".equals(e.getPropertyName())) {
+                int progress = (Integer) e.getNewValue();
+
+                progressMonitor.setProgress(progress);
+                progressMonitor.setNote(String.format("Completed %d%%.\n", progress));
+
+                if (progressMonitor.isCanceled()) {
+                    stupid.cancel(false);
+                }
+                
+                if (stupid.isDone() || stupid.isCancelled()) {
+                    // Clean up
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                }
+            }
+        });
+        
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        stupid.execute();
     }//GEN-LAST:event_stupidOptMenuItemActionPerformed
 
     /**

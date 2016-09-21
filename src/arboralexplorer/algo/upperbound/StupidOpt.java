@@ -17,49 +17,108 @@ package arboralexplorer.algo.upperbound;
 
 import arboralexplorer.Pair;
 import arboralexplorer.algo.ArboralChecker;
+import arboralexplorer.algo.GridSetWorker;
 import arboralexplorer.data.GridSet;
+import arboralexplorer.gui.DrawPanel;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class StupidOpt {
+/**
+ * This class computes a smallest superset of the given grid without
+ * ASS-violations.
+ *
+ * This is super slow, as it tries ALL supersets (modulo a little pruning).
+ */
+public class StupidOpt extends GridSetWorker {
 
-    /**
-     * Returns a superset of the given grid without ASS-violations. This is
-     * super slow, as it tries ALL supersets (modulo a little pruning).
-     *
-     * @param grid
-     * @return
-     */
-    public static GridSet solve(GridSet grid) {
-        // Compute a reasonable upper bound
-        GridSet greedySolution = GreedyASS.solve(grid);
-        int greedy = greedySolution.getSize() - greedySolution.getGroundSetSize();
-        
-        // Compute the optimum
-        Pair<boolean[][], Integer> minAss = getMinimumASS(grid.getGroundSet(), grid.getGroundSet(), 0, greedy + 1, 0, 0, ArboralChecker.getAllAssViolations(grid));
-        return new GridSet(minAss.getFirst(), grid.getGroundSet());
+    private static final int COUNT_DEPTH = 7;
+    private final int totalSubsets;
+    private final int totalGridSize;
+    private final int maxNonGroundPos;
+    private final int[] posToNonGroundPos;
+    private int handled = 0;
+
+    public StupidOpt(DrawPanel drawPanel, GridSet inputGrid) {
+        super(drawPanel, inputGrid);
+        totalGridSize = inputGrid.getWidth() * inputGrid.getHeight();
+
+        posToNonGroundPos = new int[totalGridSize];
+
+        int nonGroundPos = 0;
+
+        for (int p = 0; p < totalGridSize; p++) {
+            int i = p % inputGrid.getWidth();
+            int j = p / inputGrid.getWidth();
+
+            posToNonGroundPos[p] = nonGroundPos;
+
+            if (!inputGrid.isGroundSet(i, j)) {
+                nonGroundPos++;
+            }
+        }
+
+        totalSubsets = (int) Math.pow(2, Math.min(COUNT_DEPTH, nonGroundPos));
+        maxNonGroundPos = nonGroundPos - 1;
     }
 
-    private static Pair<boolean[][], Integer> getMinimumASS(boolean[][] groundSet, boolean[][] newGrid, int addedPoints, int bestBound, int i, int j, List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> violations) {
+    @Override
+    protected GridSet doInBackground() throws Exception {
+        boolean[][] groundSetCopy = inputGrid.getGroundSet();
+
+        // Compute a reasonable upper bound
+        GridSet greedySolution = GreedyASS.solve(new GridSet(groundSetCopy));
+        int greedy = greedySolution.getSize() - greedySolution.getGroundSetSize();
+        publish(greedySolution);
+
+        // Compute the optimum
+        boolean[][] workingCopy = GridSet.copyGrid(groundSetCopy);
+        Pair<boolean[][], Integer> minAss = getMinimumASS(groundSetCopy, workingCopy, 0, greedy, 0, ArboralChecker.getAllAssViolations(inputGrid));
+
+        if (minAss.getSecond() == Integer.MAX_VALUE) {
+            // Greedy was optimal
+            return greedySolution;
+        } else {
+            return new GridSet(minAss.getFirst(), groundSetCopy);
+        }
+    }
+
+    private Pair<boolean[][], Integer> getMinimumASS(boolean[][] groundSet, boolean[][] newGrid, int addedPoints, int bestBound, int pos, List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> violations) {
+        if (isCancelled()) {
+            return new Pair<>(null, Integer.MAX_VALUE);
+        }
         if (addedPoints >= bestBound) {
+            updateProgress(pos, true);
             return new Pair<>(null, Integer.MAX_VALUE);
         }
         if (violations.isEmpty() && ArboralChecker.isArborallySatisfied(newGrid)) {
-            return new Pair<>(GridSet.copyGrid(newGrid), addedPoints);
+            updateProgress(pos, true);
+
+            if (addedPoints < bestBound) {
+                System.out.println("Publishing new solution of size " + addedPoints);
+                publish(new GridSet(newGrid, groundSet));
+                return new Pair<>(GridSet.copyGrid(newGrid), addedPoints);
+            } else {
+                return new Pair<>(null, Integer.MAX_VALUE);
+            }
         }
-        if ((i == groundSet.length - 1 && j == groundSet[0].length - 1) || addedPoints == bestBound - 1) {
+        if ((pos == totalGridSize - 1) || addedPoints == bestBound - 1) {
+            updateProgress(pos, true);
             return new Pair<>(null, Integer.MAX_VALUE);
         }
 
-        int nextI = (i == groundSet.length - 1 ? 0 : i + 1);
-        int nextJ = (i == groundSet.length - 1 ? j + 1 : j);
+        int i = pos % newGrid.length;
+        int j = pos / newGrid.length;
 
         if (groundSet[i][j]) {
-            return getMinimumASS(groundSet, newGrid, addedPoints, bestBound, nextI, nextJ, violations);
+            return getMinimumASS(groundSet, newGrid, addedPoints, bestBound, pos + 1, violations);
         }
 
-        Pair<boolean[][], Integer> minAssWithout = getMinimumASS(groundSet, newGrid, addedPoints, bestBound, nextI, nextJ, violations);
+        Pair<boolean[][], Integer> minAssWithout = getMinimumASS(groundSet, newGrid, addedPoints, bestBound, pos + 1, violations);
+
+        if (isCancelled()) {
+            return new Pair<>(null, Integer.MAX_VALUE);
+        }
 
         // Add the point (i, j)
         newGrid[i][j] = true;
@@ -80,16 +139,35 @@ public class StupidOpt {
             }
         }
 
-        Pair<boolean[][], Integer> minAssWith = getMinimumASS(groundSet, newGrid, addedPoints + 1, Math.min(bestBound, minAssWithout.getSecond()), nextI, nextJ, violations);
+        Pair<boolean[][], Integer> minAssWith = getMinimumASS(groundSet, newGrid, addedPoints + 1, Math.min(bestBound, minAssWithout.getSecond()), pos + 1, violations);
 
         // Restore state
         newGrid[i][j] = false;
         violations.addAll(satisfiedViolations);
+
+        updateProgress(pos, false);
 
         if (minAssWith.getSecond() < minAssWithout.getSecond()) {
             return minAssWith;
         } else {
             return minAssWithout;
         }
+    }
+
+    private void updateProgress(int pos, boolean pruned) {
+        int nonGroundPos = posToNonGroundPos[pos];
+
+        if (pruned && nonGroundPos > COUNT_DEPTH) { // Too deep to count as progress
+            return;
+        }
+
+        if (!pruned && (maxNonGroundPos <= COUNT_DEPTH || nonGroundPos != COUNT_DEPTH)) {
+            return;
+        }
+
+        handled += Math.pow(2, Math.min(COUNT_DEPTH, maxNonGroundPos) - nonGroundPos);
+        int progress = (100 * handled) / totalSubsets;
+        System.out.println("updP. pos: " + pos + " ngPos: " + nonGroundPos + " pruned? " + pruned + " handled: " + handled + " total: " + totalSubsets + " progress: " + progress);
+        setProgress(progress);
     }
 }
