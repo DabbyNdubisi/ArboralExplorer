@@ -20,6 +20,7 @@ import arboralexplorer.algo.upperbound.ILPSolver;
 import arboralexplorer.algo.upperbound.OptStaticTree;
 import arboralexplorer.algo.upperbound.StaticBalancedTree;
 import arboralexplorer.algo.upperbound.StupidOpt;
+import arboralexplorer.algo.lowerbound.SignedGreedy;
 import arboralexplorer.data.GridSet;
 import jCMPL.CmplException;
 import java.awt.BorderLayout;
@@ -83,9 +84,13 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         optStaticTreeMenuItem = new javax.swing.JMenuItem();
         stupidOptMenuItem = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
+        signedPositiveGreedyMenuItem = new javax.swing.JMenuItem();
+        signedNegativeGreedyMenuItem = new javax.swing.JMenuItem();
+        signedUnionGreedyMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Arboral Explorer");
+        getContentPane().setLayout(new java.awt.BorderLayout());
 
         centerPanel.setPreferredSize(new java.awt.Dimension(800, 600));
         centerPanel.setLayout(new java.awt.BorderLayout());
@@ -230,6 +235,30 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         });
         solveMenu.add(jMenuItem1);
 
+        signedPositiveGreedyMenuItem.setText("Signed Positive Greedy");
+        signedPositiveGreedyMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                signedPositiveGreedyMenuItemActionPerformed(evt);
+            }
+        });
+        solveMenu.add(signedPositiveGreedyMenuItem);
+
+        signedNegativeGreedyMenuItem.setText("Signed Negative Greedy");
+        signedNegativeGreedyMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                signedNegativeGreedyMenuItemActionPerformed(evt);
+            }
+        });
+        solveMenu.add(signedNegativeGreedyMenuItem);
+
+        signedUnionGreedyMenuItem.setText("Signed Union Greedy");
+        signedUnionGreedyMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                signedUnionGreedyMenuItemActionPerformed(evt);
+            }
+        });
+        solveMenu.add(signedUnionGreedyMenuItem);
+
         menuBar.add(solveMenu);
 
         setJMenuBar(menuBar);
@@ -341,6 +370,18 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void signedPositiveGreedyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signedPositiveGreedyMenuItemActionPerformed
+        drawPanel.setGrid(SignedGreedy.solve(SignedGreedy.Sign.Positive, drawPanel.getGrid()));
+    }//GEN-LAST:event_signedPositiveGreedyMenuItemActionPerformed
+
+    private void signedNegativeGreedyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signedNegativeGreedyMenuItemActionPerformed
+                drawPanel.setGrid(SignedGreedy.solve(SignedGreedy.Sign.Negative, drawPanel.getGrid()));
+    }//GEN-LAST:event_signedNegativeGreedyMenuItemActionPerformed
+
+    private void signedUnionGreedyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signedUnionGreedyMenuItemActionPerformed
+        drawPanel.setGrid(SignedGreedy.solveSignedUnion(drawPanel.getGrid()));
+    }//GEN-LAST:event_signedUnionGreedyMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -366,9 +407,13 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JMenuItem randomMenuItem;
     private javax.swing.JMenuItem randomPermutationMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JMenuItem signedNegativeGreedyMenuItem;
+    private javax.swing.JMenuItem signedPositiveGreedyMenuItem;
+    private javax.swing.JMenuItem signedUnionGreedyMenuItem;
     private javax.swing.JMenu solveMenu;
     private javax.swing.JMenuItem staticBalancedMenuItem;
     private javax.swing.JPanel statusPanel;
     private javax.swing.JMenuItem stupidOptMenuItem;
     // End of variables declaration//GEN-END:variables
+
 }
