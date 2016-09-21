@@ -15,129 +15,72 @@
  */
 package arboralexplorer.algo.upperbound;
 
-import arboralexplorer.data.*;
-import jCMPL.*;
+import arboralexplorer.data.GridSet;
+import jCMPL.Cmpl;
+import jCMPL.CmplException;
+import jCMPL.CmplParameter;
+import jCMPL.CmplSet;
+import jCMPL.CmplSolElement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-
-/**
- *
- * @author ingo
- */
 public class ILPSolver {
 
-    private static final Pattern varName = Pattern.compile("x\\[(\\d+),(\\d+)\\]");
+    private static final Pattern VAR_NAME = Pattern.compile("x\\[(\\d+),(\\d+)\\]");
 
-    public static GridSet solve(GridSet d) throws CmplException {
-        Cmpl m = new Cmpl("data/ass.cmpl");
+    public static GridSet solve(GridSet grid) throws CmplException {
+        // Initialize the parameters
+        CmplSet ground = new CmplSet("ground", 2);
+        ground.setValues(getGroundSetPoints(grid));
 
-        int[][] groundJ = new int[d.getGroundSetSize()][2];
-        int c = 0;
+        CmplParameter n = new CmplParameter("n");
+        n.setValues(grid.getWidth());
 
-        for (int i = 0; i < d.getWidth(); i++) {
-            for (int j = 0; j < d.getHeight(); j++) {
-                if (d.isGroundSet(i, j)) {
-                    groundJ[c++] = new int[]{i + 1, j + 1};
+        CmplParameter m = new CmplParameter("m");
+        m.setValues(grid.getHeight());
+
+        // Set up and solve the model
+        Cmpl model = new Cmpl("data/ass.cmpl");
+        model.setSets(ground);
+        model.setParameters(n, m);
+
+        model.solve();
+
+        return new GridSet(extractSolution(model, grid.getWidth(), grid.getHeight()), grid.getGroundSet());
+    }
+
+    private static int[][] getGroundSetPoints(GridSet grid) {
+        int[][] groundSetPoints = new int[grid.getGroundSetSize()][2];
+        int pointIndex = 0;
+
+        for (int i = 0; i < grid.getWidth(); i++) {
+            for (int j = 0; j < grid.getHeight(); j++) {
+                if (grid.isGroundSet(i, j)) {
+                    groundSetPoints[pointIndex] = new int[]{i + 1, j + 1};
+                    pointIndex++;
                 }
             }
         }
 
-        CmplSet ground = new CmplSet("ground", 2);
-        ground.setValues(groundJ);
-
-        CmplParameter np = new CmplParameter("n");
-        np.setValues(d.getWidth());
-
-        CmplParameter mp = new CmplParameter("m");
-        mp.setValues(d.getHeight());
-
-        m.setSets(ground);
-        m.setParameters(np, mp);
-
-        m.solve();
-
-        System.out.printf("Objective value: %f %n", m.solution().value());
-        System.out.printf("Objective status: %s %n", m.solution().status());
-        System.out.println("Variables:");
-        for (CmplSolElement v : m.solution().variables()) {
-            System.out.printf("%10s %3s %10d %10.0f %10.0f%n", v.name(),
-                    v.type(), v.activity(), v.lowerBound(), v.upperBound());
-        }
-        System.out.println("Constraints:");
-        for (CmplSolElement ce : m.solution().constraints()) {
-            System.out.printf("%10s %3s %10.0f %10.0f %10.0f%n", ce.name(),
-                    ce.type(), ce.activity(), ce.lowerBound(), ce.upperBound());
-        }
-
-        boolean[][] solution = new boolean[d.getWidth()][d.getHeight()];
-
-        for (CmplSolElement v : m.solution().variables()) {
-            System.out.printf("%10s %3s %10d %10.0f %10.0f%n", v.name(),
-                    v.type(), v.activity(), v.lowerBound(), v.upperBound());
-            Matcher match = varName.matcher(v.name());
-            if(match.find()) {
-                int i = Integer.parseInt(match.group(1))-1;
-                int j = Integer.parseInt(match.group(2))-1;
+        return groundSetPoints;
+    }
+    
+    private static boolean[][] extractSolution(Cmpl model, int width, int height) throws CmplException, NumberFormatException {
+        boolean[][] solution = new boolean[width][height];
+        
+        for (CmplSolElement v : model.solution().variables()) {
+            Matcher match = VAR_NAME.matcher(v.name());
+            
+            if (match.find()) {
+                int i = Integer.parseInt(match.group(1)) - 1;
+                int j = Integer.parseInt(match.group(2)) - 1;
                 solution[i][j] = ((Long) v.activity()) > 0;
             }
         }
-
-
-
-        return new GridSet(solution, d.getGroundSet());
+        
+        return solution;
     }
 
-    public static void main(String[] args) throws CmplException {
-        boolean[][] grid = {{true, false, false},
-        {false, false, true},
-        {false, true, false}};
-        GridSet d = new GridSet(grid);
-//        System.getEnv("CMPLBINARY") = "./lib/Cmpl/bin/cmpl";
-
-        try {
-            Cmpl m = new Cmpl("ass.cmpl");
-
-            int[][] groundJ = new int[d.getGroundSetSize()][2];
-            int c = 0;
-
-            for (int i = 0; i < d.getWidth(); i++) {
-                for (int j = 0; j < d.getHeight(); j++) {
-                    if (d.isGroundSet(i, j)) {
-                        groundJ[c++] = new int[]{i + 1, j + 1};
-                    }
-                }
-            }
-
-            CmplSet ground = new CmplSet("ground", 2);
-            ground.setValues(groundJ);
-
-            CmplParameter np = new CmplParameter("n");
-            np.setValues(d.getWidth());
-
-            CmplParameter mp = new CmplParameter("m");
-            mp.setValues(d.getHeight());
-
-            m.setSets(ground);
-            m.setParameters(np, mp);
-
-            m.solve();
-
-            System.out.printf("Objective value: %f %n", m.solution().value());
-            System.out.printf("Objective status: %s %n", m.solution().status());
-            System.out.println("Variables:");
-            for (CmplSolElement v : m.solution().variables()) {
-                System.out.printf("%10s %3s %10d %10.0f %10.0f%n", v.name(),
-                        v.type(), v.activity(), v.lowerBound(), v.upperBound());
-            }
-            System.out.println("Constraints:");
-            for (CmplSolElement ce : m.solution().constraints()) {
-                System.out.printf("%10s %3s %10.0f %10.0f %10.0f%n", ce.name(),
-                        ce.type(), ce.activity(), ce.lowerBound(), ce.upperBound());
-            }
-        } catch (CmplException e) {
-            System.out.println(e);
-        }
+    private ILPSolver() {
     }
 }
