@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class StupidOpt extends GridSetWorker {
 
-    private static final int COUNT_DEPTH = 7;
+    private static final int COUNT_DEPTH = 15;
     private final int totalSubsets;
     private final int totalGridSize;
     private final int maxNonGroundPos;
