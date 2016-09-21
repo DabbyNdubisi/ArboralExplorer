@@ -15,6 +15,7 @@
  */
 package arboralexplorer.gui;
 
+import arboralexplorer.algo.lowerbound.LinearProgramLB;
 import arboralexplorer.algo.upperbound.GreedyASS;
 import arboralexplorer.algo.upperbound.ILPSolver;
 import arboralexplorer.algo.upperbound.OptStaticTree;
@@ -90,10 +91,11 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         signedPositiveGreedyMenuItem = new javax.swing.JMenuItem();
         signedNegativeGreedyMenuItem = new javax.swing.JMenuItem();
         signedUnionGreedyMenuItem = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Arboral Explorer");
-        getContentPane().setLayout(new java.awt.BorderLayout());
 
         centerPanel.setPreferredSize(new java.awt.Dimension(800, 600));
         centerPanel.setLayout(new java.awt.BorderLayout());
@@ -264,6 +266,18 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
 
         menuBar.add(solveMenu);
 
+        jMenu1.setText("Lower Bound");
+
+        jMenuItem2.setText("Linear Program");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
+        menuBar.add(jMenu1);
+
         setJMenuBar(menuBar);
 
         pack();
@@ -378,14 +392,14 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
                 if (progressMonitor.isCanceled()) {
                     stupid.cancel(false);
                 }
-                
+
                 if (stupid.isDone() || stupid.isCancelled()) {
                     // Clean up
                     setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                 }
             }
         });
-        
+
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         stupid.execute();
     }//GEN-LAST:event_stupidOptMenuItemActionPerformed
@@ -403,12 +417,20 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     }//GEN-LAST:event_signedPositiveGreedyMenuItemActionPerformed
 
     private void signedNegativeGreedyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signedNegativeGreedyMenuItemActionPerformed
-                drawPanel.setGrid(SignedGreedy.solve(SignedGreedy.Sign.Negative, drawPanel.getGrid()));
+        drawPanel.setGrid(SignedGreedy.solve(SignedGreedy.Sign.Negative, drawPanel.getGrid()));
     }//GEN-LAST:event_signedNegativeGreedyMenuItemActionPerformed
 
     private void signedUnionGreedyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signedUnionGreedyMenuItemActionPerformed
         drawPanel.setGrid(SignedGreedy.solveSignedUnion(drawPanel.getGrid()));
     }//GEN-LAST:event_signedUnionGreedyMenuItemActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        try {
+            drawPanel.setGrid(LinearProgramLB.solve(drawPanel.getGrid()));
+        } catch (CmplException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -426,7 +448,9 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JMenuItem fixGroundMenuItem;
     private javax.swing.JMenuItem greedyMenuItem;
     private javax.swing.JLabel groundSetSizeLabel;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;
