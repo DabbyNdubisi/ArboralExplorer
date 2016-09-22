@@ -26,12 +26,12 @@ X Smart opt (ILP)
 - Show subcritical/critical/supercritical
 - Show legal/illegal
 
-- LP lower bound
+X LP lower bound
 X Paper's LBs (SignedGreedy)
 - Best Independant rect lower bound?
 
 - Splay upper bound
 X Best static tree
 
-- Open / save solutions
+X Open / save solutions
 - Comparing solutions?

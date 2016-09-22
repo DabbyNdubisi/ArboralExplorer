@@ -23,6 +23,8 @@ import arboralexplorer.algo.upperbound.StaticBalancedTree;
 import arboralexplorer.algo.upperbound.StupidOpt;
 import arboralexplorer.algo.lowerbound.SignedGreedy;
 import arboralexplorer.data.GridSet;
+import arboralexplorer.io.GridSetReader;
+import arboralexplorer.io.GridSetWriter;
 import jCMPL.CmplException;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -32,12 +34,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.awt.Cursor;
+import java.io.File;
+import java.io.IOException;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
 
     public final DrawPanel drawPanel;
+    private final JFileChooser openFileChooser;
+    private final JFileChooser saveFileChooser;
+    private final String myExtension = "ass";
+    private final FileNameExtensionFilter myFilter = new FileNameExtensionFilter("Arborally Satisfied Sets", myExtension);
 
     /**
      * Creates new form MainFrame
@@ -49,6 +59,14 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         drawPanel.addChangeListener(this);
         drawPanel.setPreferredSize(new Dimension(1000, 600));
         centerPanel.add(drawPanel, BorderLayout.CENTER);
+
+        // Initialize the file choosers
+        openFileChooser = new JFileChooser(System.getProperty("user.dir"));
+        openFileChooser.addChoosableFileFilter(myFilter);
+        openFileChooser.setFileFilter(myFilter);
+        saveFileChooser = new JFileChooser(System.getProperty("user.dir"));
+        saveFileChooser.addChoosableFileFilter(myFilter);
+        saveFileChooser.setFileFilter(myFilter);
     }
 
     @Override
@@ -297,11 +315,48 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
+        int opened = openFileChooser.showOpenDialog(this);
 
+        if (opened == JFileChooser.APPROVE_OPTION) {
+            try {
+                File selectedFile = openFileChooser.getSelectedFile();
+                drawPanel.setGrid(GridSetReader.importGrid(selectedFile.toPath()));
+                saveFileChooser.setCurrentDirectory(selectedFile);
+            } catch (IOException ioe) {
+                // Nice error
+                ioe.printStackTrace();
+                JOptionPane.showMessageDialog(this,
+                        "An error occurred while loading the data:\n"
+                        + ioe.getMessage(),
+                        "Error!", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_openMenuItemActionPerformed
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
+        int saved = saveFileChooser.showSaveDialog(this);
 
+        if (saved == JFileChooser.APPROVE_OPTION) {
+            try {
+                File selectedFile = saveFileChooser.getSelectedFile();
+
+                // Add an extension if that wasn't done already and save the current grid
+                if (!selectedFile.getName().contains("." + myExtension)) {
+                    selectedFile = new File(selectedFile.getParent(), selectedFile.getName() + "." + myExtension);
+                }
+
+                GridSetWriter.exportGrid(drawPanel.getGrid(), selectedFile.toPath());
+
+                openFileChooser.setCurrentDirectory(selectedFile);
+            } catch (IOException ioe) {
+                // Nice error
+                ioe.printStackTrace();
+                JOptionPane.showMessageDialog(this,
+                        "An error occurred while saving the data:\n"
+                        + ioe.getMessage(),
+                        "Error!", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_saveMenuItemActionPerformed
 
     private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMenuItemActionPerformed
@@ -452,7 +507,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private void bestSignedGreedyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bestSignedGreedyMenuItemActionPerformed
         GridSet positive = SignedGreedy.solve(SignedGreedy.Sign.Positive, drawPanel.getGrid());
         GridSet negative = SignedGreedy.solve(SignedGreedy.Sign.Negative, drawPanel.getGrid());
-        
+
         if (positive.getSize() > negative.getSize()) {
             drawPanel.setGrid(positive);
         } else {
