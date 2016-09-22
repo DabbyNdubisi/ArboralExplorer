@@ -40,6 +40,7 @@ public class LinearProgramLB {
         Cmpl model = new Cmpl("data/assLP.cmpl");
         model.setSets(ground);
         model.setParameters(n, m);
+        model.setOutput(Boolean.TRUE, "LP - ");
 
         model.solve();
         

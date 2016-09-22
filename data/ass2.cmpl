@@ -1,7 +1,7 @@
 %data : n, m, ground set[2]
 
 variables:
-	x[1..n,1..m]: real[0..1];
+	x[1..n,1..m]: binary;
 
 objectives:
 	size: sum{ i:=1..n, j:=1..m : x[i,j] }->min;

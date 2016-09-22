@@ -36,9 +36,10 @@ public class ILPSolver {
         m.setValues(grid.getHeight());
 
         // Set up and solve the model
-        Cmpl model = new Cmpl("data/ass.cmpl");
+        Cmpl model = new Cmpl("data/ass2.cmpl");
         model.setSets(ground);
         model.setParameters(n, m);
+        model.setOutput(Boolean.TRUE, "ILP - ");
 
         model.solve();
 
