@@ -22,6 +22,7 @@ import arboralexplorer.algo.upperbound.OptStaticTree;
 import arboralexplorer.algo.upperbound.StaticBalancedTree;
 import arboralexplorer.algo.upperbound.StupidOpt;
 import arboralexplorer.algo.lowerbound.SignedGreedy;
+import arboralexplorer.algo.upperbound.RandomMinimal;
 import arboralexplorer.data.GridSet;
 import arboralexplorer.io.GridSetReader;
 import arboralexplorer.io.GridSetWriter;
@@ -106,6 +107,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         staticBalancedMenuItem = new javax.swing.JMenuItem();
         optStaticTreeMenuItem = new javax.swing.JMenuItem();
         stupidOptMenuItem = new javax.swing.JMenuItem();
+        randMinimalMenuItem = new javax.swing.JMenuItem();
         lowerboundMenu = new javax.swing.JMenu();
         lplbMenuItem = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
@@ -261,6 +263,14 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
             }
         });
         solveMenu.add(stupidOptMenuItem);
+
+        randMinimalMenuItem.setText("Random Minimal");
+        randMinimalMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                randMinimalMenuItemActionPerformed(evt);
+            }
+        });
+        solveMenu.add(randMinimalMenuItem);
 
         menuBar.add(solveMenu);
 
@@ -515,6 +525,10 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         }
     }//GEN-LAST:event_bestSignedGreedyMenuItemActionPerformed
 
+    private void randMinimalMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randMinimalMenuItemActionPerformed
+        drawPanel.setGrid(RandomMinimal.solve(drawPanel.getGrid()));
+    }//GEN-LAST:event_randMinimalMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -543,6 +557,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem optStaticTreeMenuItem;
     private javax.swing.JMenu pointSetMenu;
+    private javax.swing.JMenuItem randMinimalMenuItem;
     private javax.swing.JMenuItem randomMenuItem;
     private javax.swing.JMenuItem randomPermutationMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
