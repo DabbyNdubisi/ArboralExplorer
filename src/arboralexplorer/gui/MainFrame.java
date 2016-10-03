@@ -15,6 +15,7 @@
  */
 package arboralexplorer.gui;
 
+import arboralexplorer.algo.GridSetGenerator;
 import arboralexplorer.algo.lowerbound.LinearProgramLB;
 import arboralexplorer.algo.upperbound.GreedyASS;
 import arboralexplorer.algo.upperbound.ILPSolver;
@@ -403,41 +404,11 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     }//GEN-LAST:event_newMenuItemActionPerformed
 
     private void randomPermutationMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomPermutationMenuItemActionPerformed
-        int n = drawPanel.getGrid().getWidth();
-
-        if (n > 0) {
-            List<Integer> permutation = new ArrayList<>(n);
-
-            for (int i = 0; i < n; i++) {
-                permutation.add(i);
-            }
-
-            Collections.shuffle(permutation);
-
-            boolean[][] newGrid = new boolean[n][drawPanel.getGrid().getHeight()];
-
-            for (int j = 0; j < newGrid[0].length; j++) {
-                newGrid[permutation.get(j % n)][j] = true;
-            }
-
-            drawPanel.setGrid(new GridSet(newGrid));
-        }
+        drawPanel.setGrid(GridSetGenerator.randomPermutation(drawPanel.getGrid().getWidth(), drawPanel.getGrid().getHeight()));
     }//GEN-LAST:event_randomPermutationMenuItemActionPerformed
 
     private void randomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomMenuItemActionPerformed
-        int n = drawPanel.getGrid().getWidth();
-
-        if (n > 0) {
-            int m = drawPanel.getGrid().getHeight();
-            boolean[][] newGrid = new boolean[n][m];
-            Random rand = new Random();
-
-            for (int j = 0; j < m; j++) {
-                newGrid[rand.nextInt(n)][j] = true;
-            }
-
-            drawPanel.setGrid(new GridSet(newGrid));
-        }
+        drawPanel.setGrid(GridSetGenerator.random(drawPanel.getGrid().getWidth(), drawPanel.getGrid().getHeight()));
     }//GEN-LAST:event_randomMenuItemActionPerformed
 
     private void greedyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_greedyMenuItemActionPerformed
