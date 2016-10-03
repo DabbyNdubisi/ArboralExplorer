@@ -16,6 +16,7 @@
 package arboralexplorer.gui;
 
 import arboralexplorer.Pair;
+import arboralexplorer.algo.ArboralChecker;
 import arboralexplorer.data.GridSet;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -132,16 +133,29 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         if (grid.isGroundSet(x, y)) {
             g.setColor(Color.blue);
         } else {
+            int criticality = ArboralChecker.computeCriticality(grid, x, y);
+
+            if (criticality <= 0) {
+                g.setColor(new Color(255, 241, 35, 128));
+            } else if (criticality == 1) {
+                g.setColor(new Color(255, 152, 57, 128));
+            } else {
+                g.setColor(new Color(240, 25, 117, 128));
+            }
+
+            int backdropRadius = (int) Math.round(1.5 * POINT_RADIUS / zoomfactor);
+            g.fillOval(xWorldToScreen(x) - backdropRadius, yWorldToScreen(y) - backdropRadius, 2 * backdropRadius, 2 * backdropRadius);
+
             g.setColor(Color.black);
         }
 
-        int size = (int) Math.round(2 * POINT_RADIUS / zoomfactor);
-        g.fillOval(xWorldToScreen(x - POINT_RADIUS), yWorldToScreen(y - POINT_RADIUS), size, size);
+        int radius = (int) Math.round(POINT_RADIUS / zoomfactor);
+        g.fillOval(xWorldToScreen(x) - radius, yWorldToScreen(y) - radius, 2 * radius, 2 * radius);
 
         g.setColor(Color.black);
         ((Graphics2D) g).setStroke(new BasicStroke((float) (0.02 / zoomfactor)));
 
-        g.drawOval(xWorldToScreen(x - POINT_RADIUS), yWorldToScreen(y - POINT_RADIUS), size, size);
+        g.drawOval(xWorldToScreen(x) - radius, yWorldToScreen(y) - radius, 2 * radius, 2 * radius);
     }
 
     private void fillViolation(Graphics g, Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> violation) {
@@ -149,17 +163,17 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         int y1 = violation.getFirst().getSecond();
         int x2 = violation.getSecond().getFirst();
         int y2 = violation.getSecond().getSecond();
-        
+
         g.setColor(new Color(255, 32, 32, 32));
         g.fillRect(xWorldToScreen(Math.min(x1, x2) + 0.1), yWorldToScreen(Math.min(y1, y2) + 0.1), (int) Math.round((Math.abs(x1 - x2) - 0.2) / zoomfactor), (int) Math.round((Math.abs(y1 - y2) - 0.2) / zoomfactor));
     }
-    
+
     private void drawViolation(Graphics g, Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> violation) {
         int x1 = violation.getFirst().getFirst();
         int y1 = violation.getFirst().getSecond();
         int x2 = violation.getSecond().getFirst();
         int y2 = violation.getSecond().getSecond();
-        
+
         g.setColor(Color.red);
         drawLine(g, x1, y1, x2, y2);
     }
@@ -174,7 +188,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> violation : grid.getViolations()) {
             fillViolation(g, violation);
         }
-        
+
         // Draw the grid
         int width = grid.getWidth();
         int height = grid.getHeight();
