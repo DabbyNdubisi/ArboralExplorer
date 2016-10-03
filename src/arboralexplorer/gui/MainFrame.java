@@ -74,6 +74,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     public void gridChanged(DrawPanel source, GridSet newGrid) {
         groundSetSizeLabel.setText("Ground Set: " + newGrid.getGroundSetSize());
         extraPointsLabel.setText("Additional: " + (newGrid.getSize() - newGrid.getGroundSetSize()));
+        violationsLabel.setText("Violations: " + newGrid.getViolations().size());
     }
 
     /**
@@ -89,6 +90,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         statusPanel = new javax.swing.JPanel();
         groundSetSizeLabel = new javax.swing.JLabel();
         extraPointsLabel = new javax.swing.JLabel();
+        violationsLabel = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newMenuItem = new javax.swing.JMenuItem();
@@ -126,6 +128,8 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
 
         extraPointsLabel.setText("Additional: Y");
 
+        violationsLabel.setText("Violations: Z");
+
         javax.swing.GroupLayout statusPanelLayout = new javax.swing.GroupLayout(statusPanel);
         statusPanel.setLayout(statusPanelLayout);
         statusPanelLayout.setHorizontalGroup(
@@ -135,6 +139,8 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
                 .addComponent(groundSetSizeLabel)
                 .addGap(18, 18, 18)
                 .addComponent(extraPointsLabel)
+                .addGap(18, 18, 18)
+                .addComponent(violationsLabel)
                 .addContainerGap())
         );
         statusPanelLayout.setVerticalGroup(
@@ -143,7 +149,8 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
                 .addGap(6, 6, 6)
                 .addGroup(statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(groundSetSizeLabel)
-                    .addComponent(extraPointsLabel))
+                    .addComponent(extraPointsLabel)
+                    .addComponent(violationsLabel))
                 .addGap(6, 6, 6))
         );
 
@@ -568,6 +575,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JMenuItem staticBalancedMenuItem;
     private javax.swing.JPanel statusPanel;
     private javax.swing.JMenuItem stupidOptMenuItem;
+    private javax.swing.JLabel violationsLabel;
     // End of variables declaration//GEN-END:variables
 
 }
