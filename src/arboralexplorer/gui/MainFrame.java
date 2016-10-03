@@ -463,7 +463,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private void ilpOptMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ilpOptMenuItemActionPerformed
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         try {
-            drawPanel.setGrid(ILPSolver.solve(drawPanel.getGrid()));
+            drawPanel.setGrid(ILPSolver.solve(drawPanel.getGrid(), true));
         } catch (CmplException ex) {
             ex.printStackTrace();
         }
