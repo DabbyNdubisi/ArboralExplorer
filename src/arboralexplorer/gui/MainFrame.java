@@ -15,6 +15,7 @@
  */
 package arboralexplorer.gui;
 
+import arboralexplorer.algo.GridSetGenerator;
 import arboralexplorer.algo.lowerbound.LinearProgramLB;
 import arboralexplorer.algo.upperbound.GreedyASS;
 import arboralexplorer.algo.upperbound.ILPSolver;
@@ -75,6 +76,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     public void gridChanged(DrawPanel source, GridSet newGrid) {
         groundSetSizeLabel.setText("Ground Set: " + newGrid.getGroundSetSize());
         extraPointsLabel.setText("Additional: " + (newGrid.getSize() - newGrid.getGroundSetSize()));
+        violationsLabel.setText("Violations: " + newGrid.getViolations().size());
     }
 
     /**
@@ -90,6 +92,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         statusPanel = new javax.swing.JPanel();
         groundSetSizeLabel = new javax.swing.JLabel();
         extraPointsLabel = new javax.swing.JLabel();
+        violationsLabel = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newMenuItem = new javax.swing.JMenuItem();
@@ -128,6 +131,8 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
 
         extraPointsLabel.setText("Additional: Y");
 
+        violationsLabel.setText("Violations: Z");
+
         javax.swing.GroupLayout statusPanelLayout = new javax.swing.GroupLayout(statusPanel);
         statusPanel.setLayout(statusPanelLayout);
         statusPanelLayout.setHorizontalGroup(
@@ -137,6 +142,8 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
                 .addComponent(groundSetSizeLabel)
                 .addGap(18, 18, 18)
                 .addComponent(extraPointsLabel)
+                .addGap(18, 18, 18)
+                .addComponent(violationsLabel)
                 .addContainerGap())
         );
         statusPanelLayout.setVerticalGroup(
@@ -145,7 +152,8 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
                 .addGap(6, 6, 6)
                 .addGroup(statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(groundSetSizeLabel)
-                    .addComponent(extraPointsLabel))
+                    .addComponent(extraPointsLabel)
+                    .addComponent(violationsLabel))
                 .addGap(6, 6, 6))
         );
 
@@ -407,41 +415,11 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     }//GEN-LAST:event_newMenuItemActionPerformed
 
     private void randomPermutationMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomPermutationMenuItemActionPerformed
-        int n = drawPanel.getGrid().getWidth();
-
-        if (n > 0) {
-            List<Integer> permutation = new ArrayList<>(n);
-
-            for (int i = 0; i < n; i++) {
-                permutation.add(i);
-            }
-
-            Collections.shuffle(permutation);
-
-            boolean[][] newGrid = new boolean[n][drawPanel.getGrid().getHeight()];
-
-            for (int j = 0; j < newGrid[0].length; j++) {
-                newGrid[permutation.get(j % n)][j] = true;
-            }
-
-            drawPanel.setGrid(new GridSet(newGrid));
-        }
+        drawPanel.setGrid(GridSetGenerator.randomPermutation(drawPanel.getGrid().getWidth(), drawPanel.getGrid().getHeight()));
     }//GEN-LAST:event_randomPermutationMenuItemActionPerformed
 
     private void randomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomMenuItemActionPerformed
-        int n = drawPanel.getGrid().getWidth();
-
-        if (n > 0) {
-            int m = drawPanel.getGrid().getHeight();
-            boolean[][] newGrid = new boolean[n][m];
-            Random rand = new Random();
-
-            for (int j = 0; j < m; j++) {
-                newGrid[rand.nextInt(n)][j] = true;
-            }
-
-            drawPanel.setGrid(new GridSet(newGrid));
-        }
+        drawPanel.setGrid(GridSetGenerator.random(drawPanel.getGrid().getWidth(), drawPanel.getGrid().getHeight()));
     }//GEN-LAST:event_randomMenuItemActionPerformed
 
     private void greedyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_greedyMenuItemActionPerformed
@@ -496,7 +474,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private void ilpOptMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ilpOptMenuItemActionPerformed
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         try {
-            drawPanel.setGrid(ILPSolver.solve(drawPanel.getGrid()));
+            drawPanel.setGrid(ILPSolver.solve(drawPanel.getGrid(), true));
         } catch (CmplException ex) {
             ex.printStackTrace();
         }
@@ -584,6 +562,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JMenuItem staticBalancedMenuItem;
     private javax.swing.JPanel statusPanel;
     private javax.swing.JMenuItem stupidOptMenuItem;
+    private javax.swing.JLabel violationsLabel;
     // End of variables declaration//GEN-END:variables
 
 }

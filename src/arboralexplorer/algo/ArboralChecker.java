@@ -182,6 +182,13 @@ public class ArboralChecker {
         return matrix;
     }
 
+    public static int computeCriticality(GridSet grid, int x, int y) {
+        int currentViolations = grid.getViolations().size();
+        GridSet newGrid = new GridSet(grid);
+        newGrid.removePoint(x, y);
+        return newGrid.getViolations().size() - currentViolations;
+    }
+
     private static class NeighbourlyPoint {
 
         int x, y;

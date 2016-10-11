@@ -264,6 +264,8 @@
                       <Component id="groundSetSizeLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="extraPointsLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="violationsLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -275,6 +277,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="groundSetSizeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="extraPointsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="violationsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                   </Group>
@@ -290,6 +293,11 @@
             <Component class="javax.swing.JLabel" name="extraPointsLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Additional: Y"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="violationsLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Violations: Z"/>
               </Properties>
             </Component>
           </SubComponents>

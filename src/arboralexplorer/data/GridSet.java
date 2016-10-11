@@ -29,6 +29,13 @@ public class GridSet {
     private int size = INVALID;
     private int groundSetSize = INVALID;
 
+    /**
+     * Creates a new GridSet with the given ground set and no other points.
+     *
+     * @param groundSet
+     * @throws IllegalArgumentException if any of the dimensions of the grid is
+     * zero.
+     */
     public GridSet(boolean[][] groundSet) {
         this(groundSet, groundSet);
     }
@@ -60,6 +67,15 @@ public class GridSet {
         this.groundSet = copyGrid(groundSet);
     }
 
+    /**
+     * Creates a new GridSet that is a copy of the given GridSet.
+     *
+     * @param grid
+     */
+    public GridSet(GridSet grid) {
+        this(grid.gridSet, grid.groundSet);
+    }
+    
     /**
      * Returns the width of the grid. The first coordinate can take values in
      * [0, width).
@@ -137,7 +153,7 @@ public class GridSet {
         if (!groundSet[i][j]) {
             gridSet[i][j] = true;
             groundSet[i][j] = true;
-            
+
             if (groundSetSize != INVALID) {
                 groundSetSize++;
             }
@@ -266,5 +282,25 @@ public class GridSet {
 
             return newGrid;
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(gridSet.length * gridSet[0].length);
+
+        for (int i = 0; i < gridSet.length; i++) {
+            for (int j = 0; j < gridSet[0].length; j++) {
+                if (!gridSet[i][j]) {
+                    sb.append('.');
+                } else if (!groundSet[i][j]) {
+                    sb.append('+');
+                } else {
+                    sb.append('0');
+                }
+            }
+            sb.append('\n');
+        }
+
+        return sb.toString();
     }
 }

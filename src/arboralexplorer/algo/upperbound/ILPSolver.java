@@ -25,6 +25,10 @@ import jCMPL.CmplSet;
 public class ILPSolver {
 
     public static GridSet solve(GridSet grid) throws CmplException {
+        return solve(grid, false);
+    }
+
+    public static GridSet solve(GridSet grid, boolean printOutput) throws CmplException {
         // Initialize the parameters
         CmplSet ground = new CmplSet("ground", 2);
         ground.setValues(CmplUtils.getGroundSetPoints(grid));
@@ -39,7 +43,10 @@ public class ILPSolver {
         Cmpl model = new Cmpl("data/ass2.cmpl");
         model.setSets(ground);
         model.setParameters(n, m);
-        model.setOutput(Boolean.TRUE, "ILP - ");
+
+        if (printOutput) {
+            model.setOutput(Boolean.TRUE, "ILP - ");
+        }
 
         model.solve();
 
