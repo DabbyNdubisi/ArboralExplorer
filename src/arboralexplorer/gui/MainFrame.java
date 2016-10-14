@@ -23,6 +23,7 @@ import arboralexplorer.algo.upperbound.OptStaticTree;
 import arboralexplorer.algo.upperbound.StaticBalancedTree;
 import arboralexplorer.algo.upperbound.StupidOpt;
 import arboralexplorer.algo.lowerbound.SignedGreedy;
+import arboralexplorer.algo.lowerbound.Wilber1;
 import arboralexplorer.algo.upperbound.GreedyRectangle;
 import arboralexplorer.algo.upperbound.IncreasingSS;
 import arboralexplorer.algo.upperbound.RandomMinimal;
@@ -33,10 +34,6 @@ import jCMPL.CmplException;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
 import java.awt.Cursor;
 import java.io.File;
 import java.io.IOException;
@@ -99,6 +96,8 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         newMenuItem = new javax.swing.JMenuItem();
         openMenuItem = new javax.swing.JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
+        drawMenu = new javax.swing.JMenu();
+        drawCriticalityMenuItem = new javax.swing.JCheckBoxMenuItem();
         pointSetMenu = new javax.swing.JMenu();
         fixGroundMenuItem = new javax.swing.JMenuItem();
         randomMenuItem = new javax.swing.JMenuItem();
@@ -120,6 +119,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         signedNegativeGreedyMenuItem = new javax.swing.JMenuItem();
         signedUnionGreedyMenuItem = new javax.swing.JMenuItem();
         bestSignedGreedyMenuItem = new javax.swing.JMenuItem();
+        wilber1MenuItem = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         rectMenuItem = new javax.swing.JMenuItem();
         LISS = new javax.swing.JMenuItem();
@@ -194,6 +194,19 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         fileMenu.add(saveMenuItem);
 
         menuBar.add(fileMenu);
+
+        drawMenu.setText("Drawing");
+
+        drawCriticalityMenuItem.setSelected(true);
+        drawCriticalityMenuItem.setText("Draw Criticality");
+        drawCriticalityMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                drawCriticalityMenuItemActionPerformed(evt);
+            }
+        });
+        drawMenu.add(drawCriticalityMenuItem);
+
+        menuBar.add(drawMenu);
 
         pointSetMenu.setText("Ground Set");
 
@@ -329,6 +342,14 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
             }
         });
         lowerboundMenu.add(bestSignedGreedyMenuItem);
+
+        wilber1MenuItem.setText("Wilber 1");
+        wilber1MenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                wilber1MenuItemActionPerformed(evt);
+            }
+        });
+        lowerboundMenu.add(wilber1MenuItem);
 
         menuBar.add(lowerboundMenu);
 
@@ -541,6 +562,14 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         drawPanel.setGrid(IncreasingSS.solve(drawPanel.getGrid()));
     }//GEN-LAST:event_LISSActionPerformed
 
+    private void wilber1MenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wilber1MenuItemActionPerformed
+        drawPanel.setGrid(Wilber1.solve(drawPanel.getGrid()));
+    }//GEN-LAST:event_wilber1MenuItemActionPerformed
+
+    private void drawCriticalityMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawCriticalityMenuItemActionPerformed
+        drawPanel.setDrawCriticality(drawCriticalityMenuItem.isSelected());
+    }//GEN-LAST:event_drawCriticalityMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -554,6 +583,8 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JMenuItem bestSignedGreedyMenuItem;
     private javax.swing.JPanel centerPanel;
     private javax.swing.JMenuItem clearMenuItem;
+    private javax.swing.JCheckBoxMenuItem drawCriticalityMenuItem;
+    private javax.swing.JMenu drawMenu;
     private javax.swing.JLabel extraPointsLabel;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem fixGroundMenuItem;
@@ -584,6 +615,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JPanel statusPanel;
     private javax.swing.JMenuItem stupidOptMenuItem;
     private javax.swing.JLabel violationsLabel;
+    private javax.swing.JMenuItem wilber1MenuItem;
     // End of variables declaration//GEN-END:variables
 
 }

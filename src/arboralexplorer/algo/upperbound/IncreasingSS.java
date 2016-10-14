@@ -15,9 +15,7 @@
  */
 package arboralexplorer.algo.upperbound;
 
-import arboralexplorer.Pair;
 import arboralexplorer.data.GridSet;
-import static java.lang.Integer.min;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

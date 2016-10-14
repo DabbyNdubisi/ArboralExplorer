@@ -46,6 +46,8 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     // The grid
     private GridSet grid;
     private List<SetChangeListener> changeListeners;
+    // Drawing options
+    boolean drawCriticality = true;
 
     public DrawPanel() {
         initialize();
@@ -85,6 +87,15 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         this.grid = grid;
         zoomToFit();
         notifyChangeListeners();
+    }
+
+    public boolean isDrawCriticality() {
+        return drawCriticality;
+    }
+
+    public void setDrawCriticality(boolean drawCriticality) {
+        this.drawCriticality = drawCriticality;
+        repaint();
     }
 
     public void zoomToFit() {
@@ -133,23 +144,25 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         if (grid.isGroundSet(x, y)) {
             g.setColor(Color.blue);
         } else {
-            int criticality = ArboralChecker.computeCriticality(grid, x, y);
+            if (drawCriticality) {
+                int criticality = ArboralChecker.computeCriticality(grid, x, y);
 
-            if (criticality <= 0) {
-                g.setColor(new Color(255, 241, 35, 128));
-            } else if (criticality == 1) {
-                g.setColor(new Color(255, 152, 57, 128));
-            } else {
-                g.setColor(new Color(240, 25, 117, 128));
+                if (criticality <= 0) {
+                    g.setColor(new Color(255, 241, 35, 128));
+                } else if (criticality == 1) {
+                    g.setColor(new Color(255, 152, 57, 128));
+                } else {
+                    g.setColor(new Color(240, 25, 117, 128));
+                }
+
+                int backdropRadius = (int) Math.round(1.5 * POINT_RADIUS / zoomfactor);
+                g.fillOval(xWorldToScreen(x) - backdropRadius, yWorldToScreen(y) - backdropRadius, 2 * backdropRadius, 2 * backdropRadius);
             }
-
-            int backdropRadius = (int) Math.round(1.5 * POINT_RADIUS / zoomfactor);
-            g.fillOval(xWorldToScreen(x) - backdropRadius, yWorldToScreen(y) - backdropRadius, 2 * backdropRadius, 2 * backdropRadius);
 
             g.setColor(Color.black);
         }
 
-        int radius = (int) Math.round(POINT_RADIUS / zoomfactor);
+        int radius = (int) Math.max(Math.round(POINT_RADIUS / zoomfactor), 1);
         g.fillOval(xWorldToScreen(x) - radius, yWorldToScreen(y) - radius, 2 * radius, 2 * radius);
 
         g.setColor(Color.black);
