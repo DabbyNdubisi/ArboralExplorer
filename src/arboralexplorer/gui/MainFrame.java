@@ -24,6 +24,7 @@ import arboralexplorer.algo.upperbound.StaticBalancedTree;
 import arboralexplorer.algo.upperbound.StupidOpt;
 import arboralexplorer.algo.lowerbound.SignedGreedy;
 import arboralexplorer.algo.lowerbound.Wilber1;
+import arboralexplorer.algo.lowerbound.WilberX;
 import arboralexplorer.algo.upperbound.GreedyRectangle;
 import arboralexplorer.algo.upperbound.IncreasingSS;
 import arboralexplorer.algo.upperbound.RandomMinimal;
@@ -120,6 +121,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         signedUnionGreedyMenuItem = new javax.swing.JMenuItem();
         bestSignedGreedyMenuItem = new javax.swing.JMenuItem();
         wilber1MenuItem = new javax.swing.JMenuItem();
+        WilberKD = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         rectMenuItem = new javax.swing.JMenuItem();
         LISS = new javax.swing.JMenuItem();
@@ -351,6 +353,14 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         });
         lowerboundMenu.add(wilber1MenuItem);
 
+        WilberKD.setText("WilberKD");
+        WilberKD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                WilberKDActionPerformed(evt);
+            }
+        });
+        lowerboundMenu.add(WilberKD);
+
         menuBar.add(lowerboundMenu);
 
         jMenu1.setText("Misc");
@@ -570,6 +580,10 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         drawPanel.setDrawCriticality(drawCriticalityMenuItem.isSelected());
     }//GEN-LAST:event_drawCriticalityMenuItemActionPerformed
 
+    private void WilberKDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WilberKDActionPerformed
+        drawPanel.setGrid(WilberX.solve(drawPanel.getGrid()));
+    }//GEN-LAST:event_WilberKDActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -580,6 +594,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem LISS;
+    private javax.swing.JMenuItem WilberKD;
     private javax.swing.JMenuItem bestSignedGreedyMenuItem;
     private javax.swing.JPanel centerPanel;
     private javax.swing.JMenuItem clearMenuItem;
