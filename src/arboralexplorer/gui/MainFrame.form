@@ -230,6 +230,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="WilberKD">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+T"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="WilberKD"/>
               </Properties>
               <Events>
@@ -245,9 +248,6 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="rectMenuItem">
               <Properties>
-                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
-                  <KeyStroke key="Ctrl+T"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="GreedyRect"/>
               </Properties>
               <Events>

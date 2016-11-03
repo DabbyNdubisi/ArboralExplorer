@@ -17,6 +17,9 @@ package arboralexplorer.algo.lowerbound;
 
 import arboralexplorer.data.GridSet;
 import arboralexplorer.data.WilberData;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class WilberX {
 
@@ -30,25 +33,27 @@ public class WilberX {
         boolean[][] newGrid = grid.getGroundSet();
 
         WilberData wilber = new WilberData(newGrid);
-        
+
         int[] queries = getQueries(grid);
 
         solveRecursive(wilber, queries, invertPermutation(queries), 0, grid.getWidth() - 1, 0, grid.getHeight() - 1, false);
 
         GridSet newGridSet = new GridSet(wilber.getGrid(), grid.getGroundSet());
         newGridSet.setWilberData(wilber);
-        
+
         return newGridSet;
     }
 
     private static void solveRecursive(WilberData wilber, int[] queries, int[] invertq, int left, int right, int bot, int top, boolean invert) {
         //System.out.printf("sr (%d, %d, %d, %d)%n", left, right, bot, top);
 
-        if (bot >= top) {
+        if (bot >= top)
             return;
-        }
+        
+        if(countRange(queries, left, right, bot, top) <= 0)
+            return;
 
-        int mid = median(invertq, bot, top, left, right);
+        int mid = median(queries, left, right, bot, top);
 
         boolean newPoint = false;
         Side previousSide = null;
@@ -90,6 +95,24 @@ public class WilberX {
             wilber.addLine(mid, topBounded, botBounded, invert);
         }
 
+        
+        if (countRange(queries, left, right, bot, top) == 1) {
+            int only = firstInRange(queries, left, right, bot, top);
+            wilber.addHub(queries[only], only, invert);
+            if (top + 1 < queries.length) {
+                wilber.setGridPoint(queries[only], top + 1, invert);
+            }
+            if (bot - 1 > 0) {
+                wilber.setGridPoint(queries[only], bot - 1, invert);
+            }
+            if (right + 1 < queries.length) {
+                wilber.setGridPoint(right + 1, only, invert);
+            }
+            if (left - 1 > 0) {
+                wilber.setGridPoint(left - 1, only, invert);
+            }
+        }
+
         solveRecursive(wilber, invertq, queries, bot, top, left, mid - 1, !invert);
         solveRecursive(wilber, invertq, queries, bot, top, mid + 1, right, !invert);
     }
@@ -121,17 +144,28 @@ public class WilberX {
         return invert;
     }
 
+    private static int firstInRange(int[] arr, int l, int r, int b, int t) {
+        for (int i = b; i <= t; i++) {
+            if (arr[i] < l || arr[i] > r) {
+                continue;
+            }
+            return i;
+        }
+        return -1;
+    }
+
     private static int median(int[] arr, int l, int r, int b, int t) {
-        int c = countRange(arr, l, r, b, t) / 2;
         int i = b;
-        for (; i <= t && c > 0; i++) {
+        List<Integer> coords = new ArrayList();
+        for (; i <= t; i++) {
 
             if (arr[i] < l || arr[i] > r) {
                 continue;
             }
-            c--;
+            coords.add(arr[i]);
         }
-        return i;
+        Collections.sort(coords);
+        return coords.get(coords.size()/2);
     }
 
     private static int countRange(int[] arr, int l, int r, int b, int t) {

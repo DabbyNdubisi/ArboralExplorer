@@ -363,6 +363,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         });
         lowerboundMenu.add(wilber1MenuItem);
 
+        WilberKD.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_MASK));
         WilberKD.setText("WilberKD");
         WilberKD.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -375,7 +376,6 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
 
         jMenu1.setText("Misc");
 
-        rectMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_MASK));
         rectMenuItem.setText("GreedyRect");
         rectMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
