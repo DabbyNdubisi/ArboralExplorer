@@ -98,6 +98,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         openMenuItem = new javax.swing.JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
         drawMenu = new javax.swing.JMenu();
+        drawBlackMenuItem = new javax.swing.JCheckBoxMenuItem();
         drawCriticalityMenuItem = new javax.swing.JCheckBoxMenuItem();
         pointSetMenu = new javax.swing.JMenu();
         fixGroundMenuItem = new javax.swing.JMenuItem();
@@ -198,6 +199,15 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         menuBar.add(fileMenu);
 
         drawMenu.setText("Drawing");
+
+        drawBlackMenuItem.setSelected(true);
+        drawBlackMenuItem.setText("Draw Added Points");
+        drawBlackMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                drawBlackMenuItemActionPerformed(evt);
+            }
+        });
+        drawMenu.add(drawBlackMenuItem);
 
         drawCriticalityMenuItem.setSelected(true);
         drawCriticalityMenuItem.setText("Draw Criticality");
@@ -584,6 +594,10 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         drawPanel.setGrid(WilberX.solve(drawPanel.getGrid()));
     }//GEN-LAST:event_WilberKDActionPerformed
 
+    private void drawBlackMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawBlackMenuItemActionPerformed
+        drawPanel.setDrawBlack(drawBlackMenuItem.isSelected());
+    }//GEN-LAST:event_drawBlackMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -598,6 +612,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JMenuItem bestSignedGreedyMenuItem;
     private javax.swing.JPanel centerPanel;
     private javax.swing.JMenuItem clearMenuItem;
+    private javax.swing.JCheckBoxMenuItem drawBlackMenuItem;
     private javax.swing.JCheckBoxMenuItem drawCriticalityMenuItem;
     private javax.swing.JMenu drawMenu;
     private javax.swing.JLabel extraPointsLabel;

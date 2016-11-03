@@ -18,6 +18,7 @@ package arboralexplorer.gui;
 import arboralexplorer.Pair;
 import arboralexplorer.algo.ArboralChecker;
 import arboralexplorer.data.GridSet;
+import arboralexplorer.data.WilberData;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -30,6 +31,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
@@ -47,7 +49,8 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private GridSet grid;
     private List<SetChangeListener> changeListeners;
     // Drawing options
-    boolean drawCriticality = true;
+    boolean drawCriticality = false;
+    boolean drawBlack = true;
 
     public DrawPanel() {
         initialize();
@@ -95,6 +98,11 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
     public void setDrawCriticality(boolean drawCriticality) {
         this.drawCriticality = drawCriticality;
+        repaint();
+    }
+
+    public void setDrawBlack(boolean drawBlack) {
+        this.drawBlack = drawBlack;
         repaint();
     }
 
@@ -162,7 +170,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
             g.setColor(Color.black);
         }
 
-        int radius = (int) Math.max(Math.round(POINT_RADIUS / zoomfactor), 1);
+        int radius = (int) Math.max(Math.round(POINT_RADIUS / zoomfactor), 2);
         g.fillOval(xWorldToScreen(x) - radius, yWorldToScreen(y) - radius, 2 * radius, 2 * radius);
 
         g.setColor(Color.black);
@@ -188,7 +196,38 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         int y2 = violation.getSecond().getSecond();
 
         g.setColor(Color.red);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(2));
         drawLine(g, x1, y1, x2, y2);
+    }
+
+    private void drawWilberData(Graphics g, WilberData wilber) {
+        List<Pair<Integer, Integer>> hubs = wilber.getHubs();
+        for (Pair<Integer, Integer> hub : hubs) {
+            drawHub(g, hub.getFirst(), hub.getSecond());
+        }
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> splitLines = wilber.getLines();
+        for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> splitLine : splitLines) {
+            drawSplitLine(g, splitLine);
+        }
+    }
+
+    private void drawSplitLine(Graphics g, Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> splitLine) {
+        int x1 = splitLine.getFirst().getFirst();
+        int y1 = splitLine.getFirst().getSecond();
+        int x2 = splitLine.getSecond().getFirst();
+        int y2 = splitLine.getSecond().getSecond();
+
+        g.setColor(Color.green);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(2));
+        drawLine(g, x1, y1, x2, y2);
+    }
+
+    private void drawHub(Graphics g, int x, int y) {
+        g.setColor(Color.green);
+        int radius = (int) Math.max(Math.round(1.5 * POINT_RADIUS / zoomfactor), 4);
+        g.fillOval(xWorldToScreen(x) - radius, yWorldToScreen(y) - radius, 2 * radius, 2 * radius);
     }
 
     @Override
@@ -219,11 +258,19 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
             drawViolation(g, violation);
         }
 
+        // Draw the Wilber data
+        WilberData wilber = grid.getWilberData();
+        if (wilber != null) {
+            drawWilberData(g, wilber);
+        }
+
         // Draw the points
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (grid.hasPoint(i, j)) {
-                    drawPoint(g, i, j);
+        if (drawBlack) {
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    if (grid.hasPoint(i, j)) {
+                        drawPoint(g, i, j);
+                    }
                 }
             }
         }

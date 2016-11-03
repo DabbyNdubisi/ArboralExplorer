@@ -16,6 +16,7 @@
 package arboralexplorer.algo.lowerbound;
 
 import arboralexplorer.data.GridSet;
+import arboralexplorer.data.WilberData;
 
 public class WilberX {
 
@@ -28,15 +29,20 @@ public class WilberX {
     public static GridSet solve(GridSet grid) {
         boolean[][] newGrid = grid.getGroundSet();
 
+        WilberData wilber = new WilberData(newGrid);
+        
         int[] queries = getQueries(grid);
 
-        solveRecursive(newGrid, queries, invertPermutation(queries), 0, grid.getWidth() - 1, 0, grid.getHeight() - 1, false);
+        solveRecursive(wilber, queries, invertPermutation(queries), 0, grid.getWidth() - 1, 0, grid.getHeight() - 1, false);
 
-        return new GridSet(newGrid, grid.getGroundSet());
+        GridSet newGridSet = new GridSet(wilber.getGrid(), grid.getGroundSet());
+        newGridSet.setWilberData(wilber);
+        
+        return newGridSet;
     }
 
-    private static void solveRecursive(boolean[][] newGrid, int[] queries, int[] invertq, int left, int right, int bot, int top, boolean invert) {
-        System.out.printf("sr (%d, %d, %d, %d)%n", left, right, bot, top);
+    private static void solveRecursive(WilberData wilber, int[] queries, int[] invertq, int left, int right, int bot, int top, boolean invert) {
+        //System.out.printf("sr (%d, %d, %d, %d)%n", left, right, bot, top);
 
         if (bot >= top) {
             return;
@@ -59,8 +65,8 @@ public class WilberX {
 
             if (previousSide != null && previousSide != currentSide) {
                 // Add both points on the line
-                setGridPoint(newGrid, mid, prevCoord, invert);
-                setGridPoint(newGrid, mid, j, invert);
+                wilber.setGridPoint(mid, prevCoord, invert);
+                wilber.setGridPoint(mid, j, invert);
                 newPoint = true;
             }
 
@@ -69,16 +75,23 @@ public class WilberX {
         }
 
         if (newPoint) {
+            int topBounded = top + 1;
+            int botBounded = bot - 1;
             if (top + 1 < queries.length) {
-                setGridPoint(newGrid, mid, top + 1, invert);
+                wilber.addHub(mid, top + 1, invert);
+            } else {
+                topBounded--;
             }
             if (bot - 1 > 0) {
-                setGridPoint(newGrid, mid, bot - 1, invert);
+                wilber.addHub(mid, bot - 1, invert);
+            } else {
+                botBounded++;
             }
+            wilber.addLine(mid, topBounded, botBounded, invert);
         }
 
-        solveRecursive(newGrid, invertq, queries, bot, top, left, mid - 1, !invert);
-        solveRecursive(newGrid, invertq, queries, bot, top, mid + 1, right, !invert);
+        solveRecursive(wilber, invertq, queries, bot, top, left, mid - 1, !invert);
+        solveRecursive(wilber, invertq, queries, bot, top, mid + 1, right, !invert);
     }
 
     private static int[] getQueries(GridSet grid) {
@@ -130,14 +143,6 @@ public class WilberX {
             c++;
         }
         return c;
-    }
-
-    private static void setGridPoint(boolean[][] grid, int x, int y, boolean invert) {
-        if (invert) {
-            grid[y][x] = true;
-        } else {
-            grid[x][y] = true;
-        }
     }
 
     private enum Side {

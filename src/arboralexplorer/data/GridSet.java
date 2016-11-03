@@ -25,9 +25,14 @@ public class GridSet {
 
     private final boolean[][] gridSet;
     private final boolean[][] groundSet;
+    
+    private WilberData wilberData = null;
+    
     private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> violations = null;
     private int size = INVALID;
     private int groundSetSize = INVALID;
+    
+    private int wilber = INVALID;
 
     /**
      * Creates a new GridSet with the given ground set and no other points.
@@ -251,6 +256,14 @@ public class GridSet {
         violations = null;
         size = INVALID;
         groundSetSize = INVALID;
+    }
+    
+    public void setWilberData(WilberData data) {
+        this.wilberData = data;
+    }
+    
+    public WilberData getWilberData() {
+        return this.wilberData;
     }
 
     private void computeSize() {
