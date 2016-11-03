@@ -19,20 +19,16 @@ import arboralexplorer.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author ingo
- */
 public class WilberData {
 
     private List<Pair<Integer, Integer>> hubSet = null;
     private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> splitLines = null;
-    private boolean[][] grid;
+    private final boolean[][] grid;
 
     public WilberData(boolean[][] grid) {
         this.grid = grid;
-        hubSet = new ArrayList();
-        splitLines = new ArrayList();
+        hubSet = new ArrayList<>();
+        splitLines = new ArrayList<>();
     }
 
     public boolean[][] getGrid() {
@@ -49,18 +45,18 @@ public class WilberData {
 
     public void addLine(int l, int c1, int c2, boolean invert) {
         if (invert) {
-            splitLines.add(new Pair(new Pair(c1, l), new Pair(c2, l)));
+            splitLines.add(new Pair<>(new Pair<>(c1, l), new Pair<>(c2, l)));
         } else {
-            splitLines.add(new Pair(new Pair(l, c1), new Pair(l, c2)));
+            splitLines.add(new Pair<>(new Pair<>(l, c1), new Pair<>(l, c2)));
         }
     }
 
     public void addHub(int x, int y, boolean invert) {
         setGridPoint(x, y, invert);
         if (invert) {
-            hubSet.add(new Pair(y, x));
+            hubSet.add(new Pair<>(y, x));
         } else {
-            hubSet.add(new Pair(x, y));
+            hubSet.add(new Pair<>(x, y));
         }
     }
 
