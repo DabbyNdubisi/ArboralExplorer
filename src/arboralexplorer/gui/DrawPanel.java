@@ -51,6 +51,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     // Drawing options
     boolean drawCriticality = false;
     boolean drawBlack = true;
+    boolean drawGrid = true;
 
     public DrawPanel() {
         initialize();
@@ -103,6 +104,11 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
     public void setDrawBlack(boolean drawBlack) {
         this.drawBlack = drawBlack;
+        repaint();
+    }
+
+    public void setDrawGrid(boolean drawGrid) {
+        this.drawGrid = drawGrid;
         repaint();
     }
 
@@ -232,6 +238,9 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
     @Override
     protected void paintComponent(Graphics g) {
+        int width = grid.getWidth();
+        int height = grid.getHeight();
+
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, getWidth(), getHeight());
         ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -242,15 +251,14 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         }
 
         // Draw the grid
-        int width = grid.getWidth();
-        int height = grid.getHeight();
-
-        g.setColor(Color.lightGray);
-        for (int i = 0; i < width; i++) {
-            drawLine(g, i, 0, i, height - 1);
-        }
-        for (int j = 0; j < height; j++) {
-            drawLine(g, 0, j, width - 1, j);
+        if (drawGrid) {
+            g.setColor(Color.lightGray);
+            for (int i = 0; i < width; i++) {
+                drawLine(g, i, 0, i, height - 1);
+            }
+            for (int j = 0; j < height; j++) {
+                drawLine(g, 0, j, width - 1, j);
+            }
         }
 
         // Draw violations

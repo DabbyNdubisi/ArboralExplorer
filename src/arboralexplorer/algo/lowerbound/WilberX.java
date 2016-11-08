@@ -47,13 +47,20 @@ public class WilberX {
     private static void solveRecursive(WilberData wilber, int[] queries, int[] invertq, int left, int right, int bot, int top, boolean invert) {
         //System.out.printf("sr (%d, %d, %d, %d)%n", left, right, bot, top);
 
-        if (bot >= top)
+        if (bot >= top) {
             return;
-        
-        if(countRange(queries, left, right, bot, top) <= 0)
+        }
+
+//        if (left >= right) {
+//            return;
+//        }
+
+        if (countRange(queries, left, right, bot, top) <= 0) {
             return;
+        }
 
         int mid = median(queries, left, right, bot, top);
+        //mid = right - 1;
 
         boolean newPoint = false;
         Side previousSide = null;
@@ -95,10 +102,8 @@ public class WilberX {
             wilber.addLine(mid, topBounded, botBounded, invert);
         }
 
-        
         if (countRange(queries, left, right, bot, top) == 1) {
             int only = firstInRange(queries, left, right, bot, top);
-            wilber.addHub(queries[only], only, invert);
             if (top + 1 < queries.length) {
                 wilber.setGridPoint(queries[only], top + 1, invert);
             }
@@ -113,6 +118,8 @@ public class WilberX {
             }
         }
 
+//        solveRecursive(wilber, queries, invertq, left, mid - 1, bot, top, invert);
+//        solveRecursive(wilber, queries, invertq, mid + 1, right, bot, top, invert);
         solveRecursive(wilber, invertq, queries, bot, top, left, mid - 1, !invert);
         solveRecursive(wilber, invertq, queries, bot, top, mid + 1, right, !invert);
     }
@@ -165,7 +172,7 @@ public class WilberX {
             coords.add(arr[i]);
         }
         Collections.sort(coords);
-        return coords.get(coords.size()/2);
+        return coords.get(coords.size() / 2);
     }
 
     private static int countRange(int[] arr, int l, int r, int b, int t) {

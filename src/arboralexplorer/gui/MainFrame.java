@@ -98,6 +98,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         openMenuItem = new javax.swing.JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
         drawMenu = new javax.swing.JMenu();
+        drawGridMenuItem = new javax.swing.JCheckBoxMenuItem();
         drawBlackMenuItem = new javax.swing.JCheckBoxMenuItem();
         drawCriticalityMenuItem = new javax.swing.JCheckBoxMenuItem();
         pointSetMenu = new javax.swing.JMenu();
@@ -200,6 +201,15 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
 
         drawMenu.setText("Drawing");
 
+        drawGridMenuItem.setSelected(true);
+        drawGridMenuItem.setText("Draw Grid");
+        drawGridMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                drawGridMenuItemActionPerformed(evt);
+            }
+        });
+        drawMenu.add(drawGridMenuItem);
+
         drawBlackMenuItem.setSelected(true);
         drawBlackMenuItem.setText("Draw Added Points");
         drawBlackMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -209,7 +219,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         });
         drawMenu.add(drawBlackMenuItem);
 
-        drawCriticalityMenuItem.setSelected(true);
+        drawCriticalityMenuItem.setSelected(false);
         drawCriticalityMenuItem.setText("Draw Criticality");
         drawCriticalityMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -598,6 +608,10 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         drawPanel.setDrawBlack(drawBlackMenuItem.isSelected());
     }//GEN-LAST:event_drawBlackMenuItemActionPerformed
 
+    private void drawGridMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawGridMenuItemActionPerformed
+        drawPanel.setDrawGrid(drawGridMenuItem.isSelected());
+    }//GEN-LAST:event_drawGridMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -614,6 +628,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JMenuItem clearMenuItem;
     private javax.swing.JCheckBoxMenuItem drawBlackMenuItem;
     private javax.swing.JCheckBoxMenuItem drawCriticalityMenuItem;
+    private javax.swing.JCheckBoxMenuItem drawGridMenuItem;
     private javax.swing.JMenu drawMenu;
     private javax.swing.JLabel extraPointsLabel;
     private javax.swing.JMenu fileMenu;
