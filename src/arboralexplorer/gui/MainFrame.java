@@ -25,6 +25,7 @@ import arboralexplorer.algo.upperbound.StupidOpt;
 import arboralexplorer.algo.lowerbound.SignedGreedy;
 import arboralexplorer.algo.lowerbound.Wilber1;
 import arboralexplorer.algo.lowerbound.WilberX;
+import arboralexplorer.algo.upperbound.GreedyASStar;
 import arboralexplorer.algo.upperbound.GreedyRectangle;
 import arboralexplorer.algo.upperbound.IncreasingSS;
 import arboralexplorer.algo.upperbound.RandomMinimal;
@@ -109,6 +110,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         clearMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         greedyMenuItem = new javax.swing.JMenuItem();
+        GreedyASStarMenuItem = new javax.swing.JMenuItem();
         ilpOptMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         staticBalancedMenuItem = new javax.swing.JMenuItem();
@@ -278,6 +280,15 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
             }
         });
         solveMenu.add(greedyMenuItem);
+
+        GreedyASStarMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
+        GreedyASStarMenuItem.setText("GreedyASS*");
+        GreedyASStarMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GreedyASStarMenuItemActionPerformed(evt);
+            }
+        });
+        solveMenu.add(GreedyASStarMenuItem);
 
         ilpOptMenuItem.setText("ILP Opt");
         ilpOptMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -612,6 +623,10 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         drawPanel.setDrawGrid(drawGridMenuItem.isSelected());
     }//GEN-LAST:event_drawGridMenuItemActionPerformed
 
+    private void GreedyASStarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GreedyASStarMenuItemActionPerformed
+        drawPanel.setGrid(GreedyASStar.solve(drawPanel.getGrid()));
+    }//GEN-LAST:event_GreedyASStarMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -621,6 +636,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem GreedyASStarMenuItem;
     private javax.swing.JMenuItem LISS;
     private javax.swing.JMenuItem WilberKD;
     private javax.swing.JMenuItem bestSignedGreedyMenuItem;

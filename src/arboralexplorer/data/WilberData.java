@@ -50,6 +50,10 @@ public class WilberData {
             splitLines.add(new Pair<>(new Pair<>(l, c1), new Pair<>(l, c2)));
         }
     }
+    
+    public void addLine(int x1, int y1, int x2, int y2) {
+        splitLines.add(new Pair<>(new Pair<>(x1, y1), new Pair(x2, y2)));
+    }
 
     public void addHub(int x, int y, boolean invert) {
         setGridPoint(x, y, invert);
