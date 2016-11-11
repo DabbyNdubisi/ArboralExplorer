@@ -22,6 +22,7 @@ import arboralexplorer.algo.upperbound.ILPSolver;
 import arboralexplorer.algo.upperbound.OptStaticTree;
 import arboralexplorer.algo.upperbound.StaticBalancedTree;
 import arboralexplorer.algo.upperbound.StupidOpt;
+import arboralexplorer.algo.upperbound.SplayTree;
 import arboralexplorer.algo.lowerbound.SignedGreedy;
 import arboralexplorer.algo.lowerbound.Wilber1;
 import arboralexplorer.algo.lowerbound.WilberX;
@@ -117,6 +118,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         optStaticTreeMenuItem = new javax.swing.JMenuItem();
         stupidOptMenuItem = new javax.swing.JMenuItem();
         randMinimalMenuItem = new javax.swing.JMenuItem();
+        splayTreeMenuItem = new javax.swing.JMenuItem();
         lowerboundMenu = new javax.swing.JMenu();
         lplbMenuItem = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
@@ -330,6 +332,14 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
             }
         });
         solveMenu.add(randMinimalMenuItem);
+
+        splayTreeMenuItem.setText("Splay Tree");
+        splayTreeMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                splayTreeMenuItemActionPerformed(evt);
+            }
+        });
+        solveMenu.add(splayTreeMenuItem);
 
         menuBar.add(solveMenu);
 
@@ -626,6 +636,10 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private void GreedyASStarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GreedyASStarMenuItemActionPerformed
         drawPanel.setGrid(GreedyASStar.solve(drawPanel.getGrid()));
     }//GEN-LAST:event_GreedyASStarMenuItemActionPerformed
+    
+    private void splayTreeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_splayTreeMenuItemActionPerformed
+        drawPanel.setGrid(SplayTree.solve(drawPanel.getGrid()));
+    }//GEN-LAST:event_splayTreeMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -672,6 +686,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JMenuItem signedPositiveGreedyMenuItem;
     private javax.swing.JMenuItem signedUnionGreedyMenuItem;
     private javax.swing.JMenu solveMenu;
+    private javax.swing.JMenuItem splayTreeMenuItem;
     private javax.swing.JMenuItem staticBalancedMenuItem;
     private javax.swing.JPanel statusPanel;
     private javax.swing.JMenuItem stupidOptMenuItem;
