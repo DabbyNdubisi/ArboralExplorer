@@ -208,30 +208,34 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     }
 
     private void drawWilberData(Graphics g, WilberData wilber) {
-        List<Pair<Integer, Integer>> hubs = wilber.getHubs();
-        for (Pair<Integer, Integer> hub : hubs) {
-            drawHub(g, hub.getFirst(), hub.getSecond());
+        for (Pair<Integer, Integer> hub : wilber.getHubs()) {
+            drawColoredPoint(g, hub.getFirst(), hub.getSecond(), Color.green);
         }
-        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> splitLines = wilber.getLines();
-        for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> splitLine : splitLines) {
-            drawSplitLine(g, splitLine);
+        for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> splitLine : wilber.getLines()) {
+            drawColoredLine(g, splitLine, Color.green);
+        }
+        for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> line : wilber.getLines(WilberData.identifier.REDLINES)) {
+            drawColoredLine(g, line, Color.red);
+        }
+        for (Pair<Integer, Integer> hub : wilber.getPoints(WilberData.identifier.REDPOINTS)) {
+            drawColoredPoint(g, hub.getFirst(), hub.getSecond(), Color.orange);
         }
     }
 
-    private void drawSplitLine(Graphics g, Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> splitLine) {
+    private void drawColoredLine(Graphics g, Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> splitLine, Color c) {
         int x1 = splitLine.getFirst().getFirst();
         int y1 = splitLine.getFirst().getSecond();
         int x2 = splitLine.getSecond().getFirst();
         int y2 = splitLine.getSecond().getSecond();
 
-        g.setColor(Color.green);
+        g.setColor(c);
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(2));
         drawLine(g, x1, y1, x2, y2);
     }
 
-    private void drawHub(Graphics g, int x, int y) {
-        g.setColor(Color.green);
+    private void drawColoredPoint(Graphics g, int x, int y, Color c) {
+        g.setColor(c);
         int radius = (int) Math.max(Math.round(1.5 * POINT_RADIUS / zoomfactor), 4);
         g.fillOval(xWorldToScreen(x) - radius, yWorldToScreen(y) - radius, 2 * radius, 2 * radius);
     }
