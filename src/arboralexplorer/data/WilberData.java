@@ -98,7 +98,7 @@ public class WilberData {
     }
 
     public void addHub(Number x, Number y, boolean invert) {
-        setGridPoint(x, y, invert);
+        setGridPoint(x.intValue(), y.intValue(), invert);
         if (invert) {
             hubSet.add(new Point(y, x));
         } else {
@@ -123,11 +123,11 @@ public class WilberData {
         }
     }
 
-    public void setGridPoint(Number x, Number y, boolean invert) {
+    public void setGridPoint(int x, int y, boolean invert) {
         if (invert) {
-            grid[y.intValue()][x.intValue()] = true;
+            grid[y][x] = true;
         } else {
-            grid[x.intValue()][y.intValue()] = true;
+            grid[x][y] = true;
         }
     }
 
