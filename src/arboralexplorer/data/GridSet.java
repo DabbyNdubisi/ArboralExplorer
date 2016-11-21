@@ -15,6 +15,7 @@
  */
 package arboralexplorer.data;
 
+import arboralexplorer.Line;
 import arboralexplorer.Pair;
 import arboralexplorer.algo.ArboralChecker;
 import java.util.List;
@@ -28,7 +29,7 @@ public class GridSet {
     
     private WilberData wilberData = null;
     
-    private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> violations = null;
+    private List<Line> violations = null;
     private int size = INVALID;
     private int groundSetSize = INVALID;
     
@@ -218,7 +219,7 @@ public class GridSet {
      *
      * @return
      */
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getViolations() {
+    public List<Line> getViolations() {
         if (violations == null) {
             violations = ArboralChecker.getAllAssViolations(this);
         }

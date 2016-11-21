@@ -17,8 +17,8 @@ package arboralexplorer;
 
 public class Pair<T1,T2> {
 
-    private T1 first;
-    private T2 second;
+    protected T1 first;
+    protected T2 second;
 
     public Pair(T1 first, T2 second) {
         this.first = first;

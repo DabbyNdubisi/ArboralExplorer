@@ -15,7 +15,9 @@
  */
 package arboralexplorer.gui;
 
+import arboralexplorer.Line;
 import arboralexplorer.Pair;
+import arboralexplorer.Point;
 import arboralexplorer.algo.ArboralChecker;
 import arboralexplorer.data.GridSet;
 import arboralexplorer.data.WilberData;
@@ -185,21 +187,21 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         g.drawOval(xWorldToScreen(x) - radius, yWorldToScreen(y) - radius, 2 * radius, 2 * radius);
     }
 
-    private void fillViolation(Graphics g, Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> violation) {
-        int x1 = violation.getFirst().getFirst();
-        int y1 = violation.getFirst().getSecond();
-        int x2 = violation.getSecond().getFirst();
-        int y2 = violation.getSecond().getSecond();
+    private void fillViolation(Graphics g, Line violation) {
+        int x1 = violation.getFirst().getXInt();
+        int y1 = violation.getFirst().getYInt();
+        int x2 = violation.getSecond().getXInt();
+        int y2 = violation.getSecond().getYInt();
 
         g.setColor(new Color(255, 32, 32, 32));
         g.fillRect(xWorldToScreen(Math.min(x1, x2) + 0.1), yWorldToScreen(Math.min(y1, y2) + 0.1), (int) Math.round((Math.abs(x1 - x2) - 0.2) / zoomfactor), (int) Math.round((Math.abs(y1 - y2) - 0.2) / zoomfactor));
     }
 
-    private void drawViolation(Graphics g, Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> violation) {
-        int x1 = violation.getFirst().getFirst();
-        int y1 = violation.getFirst().getSecond();
-        int x2 = violation.getSecond().getFirst();
-        int y2 = violation.getSecond().getSecond();
+    private void drawViolation(Graphics g, Line violation) {
+        int x1 = violation.getFirst().getXInt();
+        int y1 = violation.getFirst().getYInt();
+        int x2 = violation.getSecond().getXInt();
+        int y2 = violation.getSecond().getYInt();
 
         g.setColor(Color.red);
         Graphics2D g2 = (Graphics2D) g;
@@ -208,36 +210,36 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     }
 
     private void drawWilberData(Graphics g, WilberData wilber) {
-        for (Pair<Integer, Integer> hub : wilber.getHubs()) {
+        wilber.getHubs().forEach((hub) -> {
             drawColoredPoint(g, hub.getFirst(), hub.getSecond(), Color.green);
-        }
-        for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> splitLine : wilber.getLines()) {
+        });
+        wilber.getLines().forEach((splitLine) -> {
             drawColoredLine(g, splitLine, Color.green);
-        }
-        for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> line : wilber.getLines(WilberData.identifier.REDLINES)) {
+        });
+        wilber.getLines(WilberData.identifier.REDLINES).forEach((line) -> {
             drawColoredLine(g, line, Color.red);
-        }
-        for (Pair<Integer, Integer> hub : wilber.getPoints(WilberData.identifier.REDPOINTS)) {
-            drawColoredPoint(g, hub.getFirst(), hub.getSecond(), Color.orange);
-        }
+        });
+        wilber.getPoints(WilberData.identifier.REDPOINTS).forEach((point) -> {
+            drawColoredPoint(g, point.getFirst(), point.getSecond(), Color.orange);
+        });
     }
 
-    private void drawColoredLine(Graphics g, Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> splitLine, Color c) {
-        int x1 = splitLine.getFirst().getFirst();
-        int y1 = splitLine.getFirst().getSecond();
-        int x2 = splitLine.getSecond().getFirst();
-        int y2 = splitLine.getSecond().getSecond();
+    private void drawColoredLine(Graphics g, Line splitLine, Color c) {
+        Number x1 = splitLine.getFirst().getFirst();
+        Number y1 = splitLine.getFirst().getSecond();
+        Number x2 = splitLine.getSecond().getFirst();
+        Number y2 = splitLine.getSecond().getSecond();
 
         g.setColor(c);
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(2));
-        drawLine(g, x1, y1, x2, y2);
+        drawLine(g, x1.floatValue(), y1.floatValue(), x2.floatValue(), y2.floatValue());
     }
 
-    private void drawColoredPoint(Graphics g, int x, int y, Color c) {
+    private void drawColoredPoint(Graphics g, Number x, Number y, Color c) {
         g.setColor(c);
         int radius = (int) Math.max(Math.round(1.5 * POINT_RADIUS / zoomfactor), 4);
-        g.fillOval(xWorldToScreen(x) - radius, yWorldToScreen(y) - radius, 2 * radius, 2 * radius);
+        g.fillOval(xWorldToScreen(x.floatValue()) - radius, yWorldToScreen(y.floatValue()) - radius, 2 * radius, 2 * radius);
     }
 
     @Override
@@ -250,7 +252,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Fill violation rectangles
-        for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> violation : grid.getViolations()) {
+        for (Line violation : grid.getViolations()) {
             fillViolation(g, violation);
         }
 
@@ -266,7 +268,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         }
 
         // Draw violations
-        for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> violation : grid.getViolations()) {
+        for (Line violation : grid.getViolations()) {
             drawViolation(g, violation);
         }
 

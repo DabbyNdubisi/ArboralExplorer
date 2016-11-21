@@ -15,6 +15,7 @@
  */
 package arboralexplorer.algo.upperbound;
 
+import arboralexplorer.Line;
 import arboralexplorer.Pair;
 import arboralexplorer.algo.ArboralChecker;
 import arboralexplorer.algo.GridSetWorker;
@@ -83,7 +84,7 @@ public class StupidOpt extends GridSetWorker {
         }
     }
 
-    private Pair<boolean[][], Integer> getMinimumASS(boolean[][] groundSet, boolean[][] newGrid, int addedPoints, int bestBound, int pos, List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> violations) {
+    private Pair<boolean[][], Integer> getMinimumASS(boolean[][] groundSet, boolean[][] newGrid, int addedPoints, int bestBound, int pos, List<Line> violations) {
         if (isCancelled()) {
             return new Pair<>(null, Integer.MAX_VALUE);
         }
@@ -123,15 +124,15 @@ public class StupidOpt extends GridSetWorker {
         // Add the point (i, j)
         newGrid[i][j] = true;
 
-        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> satisfiedViolations = new ArrayList<>();
+        List<Line> satisfiedViolations = new ArrayList<>();
 
-        for (Iterator<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> iterator = violations.iterator(); iterator.hasNext();) {
-            Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> violation = iterator.next();
+        for (Iterator<Line> iterator = violations.iterator(); iterator.hasNext();) {
+            Line violation = iterator.next();
 
-            int x1 = violation.getFirst().getFirst();
-            int y1 = violation.getFirst().getSecond();
-            int x2 = violation.getSecond().getFirst();
-            int y2 = violation.getSecond().getSecond();
+            int x1 = violation.getFirst().getXInt();
+            int y1 = violation.getFirst().getYInt();
+            int x2 = violation.getSecond().getXInt();
+            int y2 = violation.getSecond().getYInt();
 
             if (Math.min(x1, x2) <= i && i <= Math.max(x1, x2) && Math.min(y1, y2) <= j && j <= Math.max(y1, y2)) {
                 satisfiedViolations.add(violation);

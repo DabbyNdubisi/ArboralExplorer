@@ -15,7 +15,9 @@
  */
 package arboralexplorer.algo;
 
+import arboralexplorer.Line;
 import arboralexplorer.Pair;
+import arboralexplorer.Point;
 import arboralexplorer.data.GridSet;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,12 +35,12 @@ public class ArboralChecker {
         return getAllAssViolations(grid).isEmpty();
     }
 
-    public static List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getAllAssViolations(GridSet grid) {
+    public static List<Line> getAllAssViolations(GridSet grid) {
         return getAllAssViolations(grid.getGridSet());
     }
 
-    public static List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getAllAssViolations(boolean[][] grid) {
-        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> violations = new ArrayList<>();
+    public static List<Line> getAllAssViolations(boolean[][] grid) {
+        List<Line> violations = new ArrayList<>();
 
         int width = grid.length, height = grid[0].length;
         int[] lowestPoint = new int[width];
@@ -53,7 +55,7 @@ public class ArboralChecker {
                     if (lowest != j + 1) {
                         for (int k = i - 1; k >= 0 && !grid[k][j]; k--) {
                             if (lowestPoint[k] > lowest) {
-                                violations.add(new Pair<>(new Pair<>(k, lowestPoint[k]), new Pair<>(i, j)));
+                                violations.add(new Line(new Point(k, lowestPoint[k]), new Point(i, j)));
                                 lowest = lowestPoint[k];
                             }
                         }
@@ -65,7 +67,7 @@ public class ArboralChecker {
                     if (lowest != j + 1) {
                         for (int k = i + 1; k < width && !grid[k][j]; k++) {
                             if (lowestPoint[k] > lowest) {
-                                violations.add(new Pair<>(new Pair<>(i, j), new Pair<>(k, lowestPoint[k])));
+                                violations.add(new Line(new Point(i, j), new Point(k, lowestPoint[k])));
                                 lowest = lowestPoint[k];
                             }
                         }

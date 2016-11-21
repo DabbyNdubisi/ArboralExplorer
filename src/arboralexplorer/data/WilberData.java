@@ -15,16 +15,18 @@
  */
 package arboralexplorer.data;
 
+import arboralexplorer.Line;
 import arboralexplorer.Pair;
+import arboralexplorer.Point;
 import java.util.ArrayList;
 import java.util.List;
 
 public class WilberData {
 
-    private List<Pair<Integer, Integer>> hubSet = null;
-    private List<Pair<Integer, Integer>> morePoints = null;
-    private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> splitLines = null;
-    private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> moreLines = null;
+    private List<Point> hubSet = null;
+    private List<Point> morePoints = null;
+    private List<Line> splitLines = null;
+    private List<Line> moreLines = null;
     private final boolean[][] grid;
 
     public WilberData(boolean[][] grid) {
@@ -39,11 +41,11 @@ public class WilberData {
         return grid;
     }
 
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getLines() {
+    public List<Line> getLines() {
         return splitLines;
     }
 
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getLines(identifier id) {
+    public List<Line> getLines(identifier id) {
         switch (id) {
             case REDLINES:
                 return moreLines;
@@ -52,15 +54,15 @@ public class WilberData {
         }
     }
 
-    public void setLines(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> lines) {
+    public void setLines(List<Line> lines) {
         this.splitLines = lines;
     }
 
-    public List<Pair<Integer, Integer>> getHubs() {
+    public List<Point> getHubs() {
         return hubSet;
     }
 
-    public List<Pair<Integer, Integer>> getPoints(identifier id) {
+    public List<Point> getPoints(identifier id) {
         switch (id) {
             case REDPOINTS:
                 return morePoints;
@@ -69,60 +71,63 @@ public class WilberData {
         }
     }
 
-    public void addLine(int l, int c1, int c2, boolean invert) {
+    public void addLine(Number l, Number c1, Number c2, boolean invert) {
         if (invert) {
-            splitLines.add(new Pair<>(new Pair<>(c1, l), new Pair<>(c2, l)));
+            splitLines.add(new Line(new Point(c1, l), new Point(c2, l)));
         } else {
-            splitLines.add(new Pair<>(new Pair<>(l, c1), new Pair<>(l, c2)));
+            splitLines.add(new Line(new Point(l, c1), new Point(l, c2)));
         }
     }
 
-    public void addLine(int x1, int y1, int x2, int y2) {
-        splitLines.add(new Pair<>(new Pair<>(x1, y1), new Pair(x2, y2)));
+    public void addLine(Number x1, Number y1, Number x2, Number y2) {
+        splitLines.add(new Line(new Point(x1, y1), new Point(x2, y2)));
     }
 
-    public void addLine(Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> line, identifier id) {
+    public void addLine(Line line, identifier id) {
         addLine(line.getFirst().getFirst(), line.getFirst().getSecond(), line.getSecond().getFirst(), line.getSecond().getSecond(), id);
     }
     
-    public void addLine(int x1, int y1, int x2, int y2, identifier id) {
+    public void addLine(Number x1, Number y1, Number x2, Number y2, identifier id) {
         switch (id) {
             case REDLINES:
-                moreLines.add(new Pair<>(new Pair<>(x1, y1), new Pair(x2, y2)));
+                moreLines.add(new Line(new Point(x1, y1), new Point(x2, y2)));
+                break;
             default:
                 return;
         }
     }
 
-    public void addHub(int x, int y, boolean invert) {
+    public void addHub(Number x, Number y, boolean invert) {
         setGridPoint(x, y, invert);
         if (invert) {
-            hubSet.add(new Pair<>(y, x));
+            hubSet.add(new Point(y, x));
         } else {
-            hubSet.add(new Pair<>(x, y));
+            hubSet.add(new Point(x, y));
         }
     }
 
-    public void addPoint(Pair<Integer, Integer> point, identifier id) {
+    public void addPoint(Point point, identifier id) {
         addPoint(point.getFirst(), point.getSecond(), id);
     }
     
-    public void addPoint(int x, int y, identifier id) {
+    public void addPoint(Number x, Number y, identifier id) {
         switch (id) {
             case GREENPOINTS:
-                hubSet.add(new Pair<>(x, y));
+                hubSet.add(new Point(x, y));
+                break;
             case REDPOINTS:
-                morePoints.add(new Pair<>(x, y));
+                morePoints.add(new Point(x, y));
+                break;
             default:
                 return;
         }
     }
 
-    public void setGridPoint(int x, int y, boolean invert) {
+    public void setGridPoint(Number x, Number y, boolean invert) {
         if (invert) {
-            grid[y][x] = true;
+            grid[y.intValue()][x.intValue()] = true;
         } else {
-            grid[x][y] = true;
+            grid[x.intValue()][y.intValue()] = true;
         }
     }
 
