@@ -211,7 +211,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
     private void drawWilberData(Graphics g, WilberData wilber) {
         wilber.getHubs().forEach((hub) -> {
-            drawColoredPoint(g, hub.getFirst(), hub.getSecond(), Color.green);
+            drawColoredPoint(g, hub, Color.green);
         });
         wilber.getLines().forEach((splitLine) -> {
             drawColoredLine(g, splitLine, Color.green);
@@ -220,7 +220,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
             drawColoredLine(g, line, Color.red);
         });
         wilber.getPoints(WilberData.identifier.REDPOINTS).forEach((point) -> {
-            drawColoredPoint(g, point.getFirst(), point.getSecond(), Color.orange);
+            drawColoredPoint(g, point, Color.orange);
         });
     }
 
@@ -236,9 +236,11 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         drawLine(g, x1.floatValue(), y1.floatValue(), x2.floatValue(), y2.floatValue());
     }
 
-    private void drawColoredPoint(Graphics g, Number x, Number y, Color c) {
+    private void drawColoredPoint(Graphics g, Point point, Color c) {
+        Number x = point.getX();
+        Number y = point.getY();
         g.setColor(c);
-        int radius = (int) Math.max(Math.round(1.5 * POINT_RADIUS / zoomfactor), 4);
+        int radius = (int) Math.max(Math.round(0.5 * POINT_RADIUS / zoomfactor), 3);
         g.fillOval(xWorldToScreen(x.floatValue()) - radius, yWorldToScreen(y.floatValue()) - radius, 2 * radius, 2 * radius);
     }
 
