@@ -47,6 +47,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private int panY = 0;
     private int mouseX = 0;
     private int mouseY = 0;
+    
     // The grid
     private GridSet grid;
     private List<SetChangeListener> changeListeners;

@@ -15,6 +15,8 @@
  */
 package arboralexplorer.gui;
 
+import arboralexplorer.BinarySearchTree;
+import arboralexplorer.Pair;
 import arboralexplorer.algo.GridSetGenerator;
 import arboralexplorer.algo.lowerbound.LinearProgramLB;
 import arboralexplorer.algo.upperbound.GreedyASS;
@@ -22,7 +24,7 @@ import arboralexplorer.algo.upperbound.ILPSolver;
 import arboralexplorer.algo.upperbound.OptStaticTree;
 import arboralexplorer.algo.upperbound.StaticBalancedTree;
 import arboralexplorer.algo.upperbound.StupidOpt;
-import arboralexplorer.algo.upperbound.SplayTree;
+import arboralexplorer.algo.upperbound.SplayTreeSolver;
 import arboralexplorer.algo.lowerbound.SignedGreedy;
 import arboralexplorer.algo.lowerbound.Wilber1;
 import arboralexplorer.algo.lowerbound.WilberX;
@@ -40,6 +42,7 @@ import java.beans.PropertyChangeEvent;
 import java.awt.Cursor;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitor;
@@ -52,6 +55,8 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private final JFileChooser saveFileChooser;
     private final String myExtension = "ass";
     private final FileNameExtensionFilter myFilter = new FileNameExtensionFilter("Arborally Satisfied Sets", myExtension);
+    
+    private final SplayTreeFrame stFrame;
 
     /**
      * Creates new form MainFrame
@@ -63,6 +68,10 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         drawPanel.addChangeListener(this);
         drawPanel.setPreferredSize(new Dimension(1000, 600));
         centerPanel.add(drawPanel, BorderLayout.CENTER);
+        
+        // keep only one Splay Tree frame
+        stFrame = new SplayTreeFrame();
+        stFrame.setVisible(false);
 
         // Initialize the file choosers
         openFileChooser = new JFileChooser(System.getProperty("user.dir"));
@@ -89,6 +98,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         centerPanel = new javax.swing.JPanel();
         statusPanel = new javax.swing.JPanel();
         groundSetSizeLabel = new javax.swing.JLabel();
@@ -131,6 +141,17 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
         jMenu1 = new javax.swing.JMenu();
         rectMenuItem = new javax.swing.JMenuItem();
         LISS = new javax.swing.JMenuItem();
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Arboral Explorer");
@@ -638,7 +659,10 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     }//GEN-LAST:event_GreedyASStarMenuItemActionPerformed
     
     private void splayTreeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_splayTreeMenuItemActionPerformed
-        drawPanel.setGrid(SplayTree.solve(drawPanel.getGrid()));
+        Pair<GridSet, ArrayList<BinarySearchTree>> solution = SplayTreeSolver.solve(drawPanel.getGrid(), true);
+        drawPanel.setGrid(solution.getFirst());
+        stFrame.setAccessTrees(solution.getSecond());
+        stFrame.setVisible(true);
     }//GEN-LAST:event_splayTreeMenuItemActionPerformed
 
     /**
@@ -667,6 +691,7 @@ public class MainFrame extends javax.swing.JFrame implements SetChangeListener {
     private javax.swing.JLabel groundSetSizeLabel;
     private javax.swing.JMenuItem ilpOptMenuItem;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
